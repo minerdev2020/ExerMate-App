@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/tab_alert"
+        android:enabled="true"
+        android:title="警报"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/tab_person"
+        android:enabled="true"
+        android:title="人员"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/tab_equipment"
+        android:enabled="true"
+        android:title="设备"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/tab_message"
+        android:enabled="true"
+        android:title="消息"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/tab_settings"
+        android:enabled="true"
+        android:title="设定"
+        app:showAsAction="always" />
+</menu>

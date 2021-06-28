@@ -23,6 +23,20 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        if (checkLoginStatus()) {
+            val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
+            val id = sharedPreferences.getString("id", "") ?: ""
+            val userId = sharedPreferences.getString("user_id", "") ?: ""
+
+            Constants.ID = id
+            Constants.USER_ID = userId
+
+            Log.d(Constants.TAG, "login : $userId")
+
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
         setupButtons()
         setupEditTexts()
     }
@@ -64,6 +78,11 @@ class LoginActivity : AppCompatActivity() {
                 Log.d(Constants.TAG, "tryLogin error : " + error.localizedMessage)
             }
         )
+    }
+
+    private fun checkLoginStatus(): Boolean {
+        val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
+        return sharedPreferences != null && sharedPreferences.contains("user_id")
     }
 
     private fun setupButtons() {

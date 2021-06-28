@@ -1,12 +1,74 @@
 package com.minerdev.exermate.view.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.minerdev.exermate.R
+import com.minerdev.exermate.adapter.SectionPageAdapter
+import com.minerdev.exermate.databinding.ActivityMainBinding
+import com.minerdev.exermate.utils.Constants
+import com.minerdev.exermate.view.fragment.*
 
 class MainActivity : AppCompatActivity() {
+    private var backPressedTime: Long = 0
+
+    private val adapter = SectionPageAdapter(this)
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
+
+        setupViewPager()
+        setupBottomNavigationView()
+    }
+
+    override fun onBackPressed() {
+        val tempTime = System.currentTimeMillis()
+        val intervalTime = tempTime - backPressedTime
+
+        if (intervalTime in 0..Constants.FINISH_INTERVAL_TIME) {
+            ActivityCompat.finishAffinity(this)
+
+        } else {
+            backPressedTime = tempTime
+            Toast.makeText(this, "再输入一遍会退出程序。", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setupViewPager() {
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.bottomNav.menu.getItem(position).isChecked = true
+                supportActionBar?.title = adapter.getPageTitle(position)
+            }
+        })
+
+        adapter.addFragment(TodayGoalFragment(), "오늘의 운동")
+        adapter.addFragment(SchedulerFragment(), "운동 일정 관리")
+        adapter.addFragment(GatheringFragment(), "운동 모임 찾기")
+        adapter.addFragment(CommunityFragment(), "운동 커뮤니티")
+        adapter.addFragment(SettingFragment(), "설정")
+        binding.viewPager.adapter = adapter
+
+        setupBottomNavigationView()
+    }
+
+    private fun setupBottomNavigationView() {
+        binding.bottomNav.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.tab_alert -> binding.viewPager.currentItem = 0
+                R.id.tab_person -> binding.viewPager.currentItem = 1
+                R.id.tab_equipment -> binding.viewPager.currentItem = 2
+                R.id.tab_message -> binding.viewPager.currentItem = 3
+                R.id.tab_settings -> binding.viewPager.currentItem = 4
+                else -> {
+                }
+            }
+            true
+        }
     }
 }
