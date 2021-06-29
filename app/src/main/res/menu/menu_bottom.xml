@@ -2,32 +2,37 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/tab_alert"
+        android:id="@+id/tab_goal"
         android:enabled="true"
-        android:title="警报"
+        android:icon="@drawable/ic_round_list_alt_24"
+        android:title="오늘의 목표"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/tab_person"
+        android:id="@+id/tab_scheduler"
         android:enabled="true"
-        android:title="人员"
+        android:icon="@drawable/ic_round_calendar_today_24"
+        android:title="운동 일정 관리"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/tab_equipment"
+        android:id="@+id/tab_gathering"
         android:enabled="true"
-        android:title="设备"
+        android:icon="@drawable/ic_round_search_24"
+        android:title="운동 모임 찾기"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/tab_message"
+        android:id="@+id/tab_community"
         android:enabled="true"
-        android:title="消息"
+        android:icon="@drawable/ic_round_group_24"
+        android:title="운동 커뮤니티"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/tab_settings"
         android:enabled="true"
-        android:title="设定"
+        android:icon="@drawable/ic_round_settings_24"
+        android:title="설정"
         app:showAsAction="always" />
 </menu>

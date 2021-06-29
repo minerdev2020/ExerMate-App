@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exermate">
+        <activity android:name=".view.activity.GoalModifyActivity"></activity>
         <activity android:name=".view.activity.SignInActivity" />
         <activity
             android:name=".view.activity.LoginActivity"
@@ -19,6 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.MainActivity" />
+        <activity
+            android:name=".view.activity.MainActivity"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
     </application>
+
 </manifest>

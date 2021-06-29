@@ -1,8 +1,10 @@
 package com.minerdev.exermate.view.activity
 
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.minerdev.exermate.R
@@ -23,6 +25,16 @@ class MainActivity : AppCompatActivity() {
 
         setupViewPager()
         setupBottomNavigationView()
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = adapter.getPageTitle(0)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val menuInflater = menuInflater
+        menuInflater.inflate(R.menu.menu_toolbar_main, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onBackPressed() {
@@ -34,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             backPressedTime = tempTime
-            Toast.makeText(this, "再输入一遍会退出程序。", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "한 번 더 누르시면 앱이 종료 됩니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -47,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        adapter.addFragment(TodayGoalFragment(), "오늘의 운동")
+        adapter.addFragment(TodayGoalFragment(), "오늘의 목표")
         adapter.addFragment(SchedulerFragment(), "운동 일정 관리")
         adapter.addFragment(GatheringFragment(), "운동 모임 찾기")
         adapter.addFragment(CommunityFragment(), "운동 커뮤니티")
@@ -60,10 +72,10 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNavigationView() {
         binding.bottomNav.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.tab_alert -> binding.viewPager.currentItem = 0
-                R.id.tab_person -> binding.viewPager.currentItem = 1
-                R.id.tab_equipment -> binding.viewPager.currentItem = 2
-                R.id.tab_message -> binding.viewPager.currentItem = 3
+                R.id.tab_goal -> binding.viewPager.currentItem = 0
+                R.id.tab_scheduler -> binding.viewPager.currentItem = 1
+                R.id.tab_gathering -> binding.viewPager.currentItem = 2
+                R.id.tab_community -> binding.viewPager.currentItem = 3
                 R.id.tab_settings -> binding.viewPager.currentItem = 4
                 else -> {
                 }
