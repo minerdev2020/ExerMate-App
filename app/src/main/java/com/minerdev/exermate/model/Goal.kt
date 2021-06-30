@@ -9,8 +9,8 @@ data class Goal(
     var id: Int = 0,
     var createdAt: String = "",
     var updatedAt: String = "",
-    var current: Float = 0F,
-    var goal: Float = 0F,
+    var current: Int = 0,
+    var goal: Int = 0,
     var state: Byte = 0,
     var type: String = ""
 ) {
