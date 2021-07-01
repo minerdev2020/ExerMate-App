@@ -4,15 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.minerdev.exermate.R
 import com.minerdev.exermate.adapter.GoalListAdapter
 import com.minerdev.exermate.databinding.FragmentTodayGoalBinding
 import com.minerdev.exermate.model.Goal
 import com.minerdev.exermate.view.activity.GoalModifyActivity
-import com.minerdev.exermate.view.dialog.DropdownDialog
 
 class TodayGoalFragment : Fragment() {
     companion object {
@@ -37,35 +36,36 @@ class TodayGoalFragment : Fragment() {
                 view: View,
                 position: Int
             ) {
-                val dialog = DropdownDialog(listOf("목표 수정", "목표 삭제")) { _, _, position, _ ->
-                    when (position) {
-                        0 -> {
-                            val intent = Intent(context, GoalModifyActivity::class.java)
-                            intent.putExtra("mode", MODIFY_MODE)
-                            intent.putExtra("id", adapter[position].id)
-                            startActivity(intent)
-                        }
-
-                        1 -> {
-                            val builder = AlertDialog.Builder(requireContext())
-                            builder.setTitle("경고")
-                            builder.setIcon(R.drawable.ic_round_warning_24)
-                            builder.setMessage("정말 삭제 하시겠습니까?")
-                            builder.setPositiveButton("네") { _, _ ->
-//                                viewModel.deleteItem(adapter[position].id)
-                            }
-                            builder.setNegativeButton("아니요") { _, _ ->
-                                return@setNegativeButton
+                MaterialAlertDialogBuilder(requireContext())
+                    .setItems(arrayOf("목표 수정", "목표 삭제")) { _, which ->
+                        when (which) {
+                            0 -> {
+                                val intent = Intent(context, GoalModifyActivity::class.java).apply {
+                                    putExtra("mode", MODIFY_MODE)
+                                    putExtra("id", adapter[position].id)
+                                }
+                                startActivity(intent)
                             }
 
-                            val alertDialog = builder.create()
-                            alertDialog.show()
-                        }
+                            1 -> {
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("경고")
+                                    .setIcon(R.drawable.ic_round_warning_24)
+                                    .setMessage("정말 삭제 하시겠습니까?")
+                                    .setPositiveButton("네") { _, _ ->
+//                                        viewModel.deleteItem(adapter[position].id)
+                                    }
+                                    .setNegativeButton("아니요") { _, _ ->
+                                        return@setNegativeButton
+                                    }
+                                    .show()
+                            }
 
-                        else -> Toast.makeText(context, "Unknown item!", Toast.LENGTH_LONG).show()
+                            else -> Toast.makeText(context, "Unknown item!", Toast.LENGTH_LONG)
+                                .show()
+                        }
                     }
-                }
-                dialog.show(requireActivity().supportFragmentManager, "GoalModifyDropdownDialog")
+                    .show()
             }
         }
 
@@ -98,8 +98,9 @@ class TodayGoalFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.toolbar_add_goal -> {
-                val intent = Intent(context, GoalModifyActivity::class.java)
-                intent.putExtra("mode", ADD_MODE)
+                val intent = Intent(context, GoalModifyActivity::class.java).apply {
+                    putExtra("mode", ADD_MODE)
+                }
                 startActivity(intent)
             }
             else -> {

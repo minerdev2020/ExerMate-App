@@ -40,8 +40,9 @@
                 android:id="@+id/et_id"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="이메일 입력" />
-
+                android:hint="이메일 입력"
+                android:inputType="textShortMessage"
+                android:privateImeOptions="defaultInputmode=english" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -54,7 +55,9 @@
                 android:id="@+id/et_pw"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="비밀번호 입력" />
+                android:hint="비밀번호 입력"
+                android:inputType="textPassword"
+                android:privateImeOptions="defaultInputmode=english" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 

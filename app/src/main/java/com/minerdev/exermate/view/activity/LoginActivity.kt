@@ -11,9 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.minerdev.exermate.databinding.ActivityLoginBinding
-import com.minerdev.exermate.network.AuthService
 import com.minerdev.exermate.utils.Constants
-import org.json.JSONObject
 import java.util.regex.Pattern
 
 class LoginActivity : AppCompatActivity() {
@@ -32,9 +30,7 @@ class LoginActivity : AppCompatActivity() {
             Constants.USER_ID = userId
 
             Log.d(Constants.TAG, "login : $userId")
-
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, MainActivity::class.java))
         }
 
         setupButtons()
