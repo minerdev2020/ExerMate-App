@@ -91,8 +91,7 @@ class TodayGoalFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        val item = menu.findItem(R.id.toolbar_add_goal)
-        item.isVisible = true
+        inflater.inflate(R.menu.menu_toolbar_today_goal, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,7 +1,6 @@
 package com.minerdev.exermate.view.activity
 
 import android.os.Bundle
-import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -31,12 +30,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = adapter.getPageTitle(0)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val menuInflater = menuInflater
-        menuInflater.inflate(R.menu.menu_toolbar_main, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
     override fun onBackPressed() {
         val tempTime = System.currentTimeMillis()
         val intervalTime = tempTime - backPressedTime
@@ -60,9 +53,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         adapter.addFragment(TodayGoalFragment(), "오늘의 목표")
-        adapter.addFragment(SchedulerFragment(), "운동 일정 관리")
         adapter.addFragment(GatheringFragment(), "운동 모임 찾기")
-        adapter.addFragment(CommunityFragment(), "운동 커뮤니티")
         adapter.addFragment(SettingFragment(), "설정")
         binding.viewPager.adapter = adapter
 
@@ -73,10 +64,8 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.tab_goal -> binding.viewPager.currentItem = 0
-                R.id.tab_scheduler -> binding.viewPager.currentItem = 1
-                R.id.tab_gathering -> binding.viewPager.currentItem = 2
-                R.id.tab_community -> binding.viewPager.currentItem = 3
-                R.id.tab_settings -> binding.viewPager.currentItem = 4
+                R.id.tab_gathering -> binding.viewPager.currentItem = 1
+                R.id.tab_settings -> binding.viewPager.currentItem = 2
                 else -> {
                 }
             }

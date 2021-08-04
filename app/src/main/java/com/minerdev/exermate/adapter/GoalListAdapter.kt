@@ -24,8 +24,7 @@ class GoalListAdapter(diffCallback: DiffCallback) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item)
+        holder.bind(getItem(position))
     }
 
     operator fun get(position: Int): Goal {
@@ -44,7 +43,7 @@ class GoalListAdapter(diffCallback: DiffCallback) :
 
         init {
             binding.imageBtnMore.setOnClickListener {
-                listener.onButtonClick(this@ViewHolder, itemView, adapterPosition)
+                listener.onButtonClick(this, itemView, adapterPosition)
             }
         }
 

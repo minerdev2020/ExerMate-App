@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exermate">
-        <activity android:name=".view.activity.GoalModifyActivity"></activity>
+        <activity android:name=".view.activity.PostActivity"></activity>
+        <activity android:name=".view.activity.GoalModifyActivity" />
         <activity android:name=".view.activity.SignInActivity" />
         <activity
             android:name=".view.activity.LoginActivity"

@@ -14,7 +14,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:menu="@menu/menu_toolbar_main"
+        app:menu="@menu/menu_toolbar_today_goal"
         app:titleTextColor="@color/white" />
 
     <androidx.viewpager2.widget.ViewPager2

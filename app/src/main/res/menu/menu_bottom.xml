@@ -9,24 +9,10 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/tab_scheduler"
-        android:enabled="true"
-        android:icon="@drawable/ic_round_calendar_today_24"
-        android:title="운동 일정 관리"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/tab_gathering"
         android:enabled="true"
         android:icon="@drawable/ic_round_search_24"
         android:title="운동 모임 찾기"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/tab_community"
-        android:enabled="true"
-        android:icon="@drawable/ic_round_group_24"
-        android:title="운동 커뮤니티"
         app:showAsAction="always" />
 
     <item
