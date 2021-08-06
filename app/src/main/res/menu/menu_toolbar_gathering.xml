@@ -4,7 +4,7 @@
     <item
         android:id="@+id/toolbar_create_post"
         android:enabled="true"
-        android:icon="@drawable/ic_round_add_24"
+        android:icon="@drawable/ic_round_edit_24"
         android:title="모집글 작성"
         app:showAsAction="always" />
 </menu>
