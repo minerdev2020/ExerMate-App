@@ -5,8 +5,12 @@
       <map>
         <entry key="..\:/Users/miner/AndroidStudioProjects/Exermate/app/src/main/res/layout/activity_chat.xml" value="0.32546296296296295" />
         <entry key="..\:/Users/miner/AndroidStudioProjects/Exermate/app/src/main/res/layout/activity_post.xml" value="0.23703703703703705" />
+        <entry key="..\:/Users/miner/AndroidStudioProjects/Exermate/app/src/main/res/layout/fragment_today_goal.xml" value="0.32546296296296295" />
         <entry key="..\:/Users/miner/AndroidStudioProjects/Exermate/app/src/main/res/layout/item_chat.xml" value="0.32546296296296295" />
-        <entry key="..\:/Users/miner/AndroidStudioProjects/Exermate/app/src/main/res/layout/item_gathering.xml" value="0.32100456621004564" />
+        <entry key="..\:/Users/miner/AndroidStudioProjects/Exermate/app/src/main/res/layout/item_gathering.xml" value="0.32546296296296295" />
+        <entry key="..\:/Users/miner/AndroidStudioProjects/Exermate/app/src/main/res/layout/item_my_chat.xml" value="0.32546296296296295" />
+        <entry key="..\:/Users/miner/AndroidStudioProjects/Exermate/app/src/main/res/layout/item_system_chat.xml" value="0.32546296296296295" />
+        <entry key="..\:/Users/miner/AndroidStudioProjects/Exermate/app/src/main/res/menu/menu_toolbar_gathering.xml" value="0.32546296296296295" />
       </map>
     </option>
   </component>

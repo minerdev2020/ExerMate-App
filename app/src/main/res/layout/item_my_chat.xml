@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/chatItem_layout"
+    android:id="@+id/myChatItem_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="start">
+    android:gravity="end">
+
+    <TextView
+        android:id="@+id/tv_createdAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="2dp"
+        android:text="오후 12:05"
+        android:textSize="10sp" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="5dp"
+        app:cardBackgroundColor="#FFFF00"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp">
 
@@ -28,14 +39,4 @@
                 android:textSize="15sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/tv_createdAt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="5dp"
-        android:layout_marginBottom="2dp"
-        android:text="오후 12:05"
-        android:textSize="10sp" />
 </LinearLayout>
