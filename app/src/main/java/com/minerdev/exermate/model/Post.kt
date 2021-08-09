@@ -5,7 +5,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 @Serializable
-data class Gathering(
+data class Post(
     var id: Int = 0,
     var createdAt: String = "",
     var updatedAt: String = "",

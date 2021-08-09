@@ -7,13 +7,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.minerdev.exermate.R
-import com.minerdev.exermate.adapter.GatheringAdapter
+import com.minerdev.exermate.adapter.PostAdapter
 import com.minerdev.exermate.databinding.FragmentGatheringBinding
-import com.minerdev.exermate.model.Gathering
+import com.minerdev.exermate.model.Post
+import com.minerdev.exermate.view.activity.EditPostActivity
 import com.minerdev.exermate.view.activity.PostActivity
 
 class GatheringFragment : Fragment() {
-    private val adapter = GatheringAdapter(GatheringAdapter.DiffCallBack())
+    private val adapter = PostAdapter(PostAdapter.DiffCallBack())
     private val binding by lazy { FragmentGatheringBinding.inflate(layoutInflater) }
 
     override fun onCreateView(
@@ -30,9 +31,9 @@ class GatheringFragment : Fragment() {
         )
         binding.recyclerView.adapter = adapter
 
-        adapter.clickListener = object : GatheringAdapter.OnItemClickListener {
+        adapter.clickListener = object : PostAdapter.OnItemClickListener {
             override fun onButtonClick(
-                viewHolder: GatheringAdapter.ViewHolder,
+                viewHolder: PostAdapter.ViewHolder,
                 view: View,
                 position: Int
             ) {
@@ -42,62 +43,62 @@ class GatheringFragment : Fragment() {
 
         adapter.submitList(
             listOf(
-                Gathering(
+                Post(
                     id = 1,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 2,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 3,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 4,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 5,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 6,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 7,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 8,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 9,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 10,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 11,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
                 ),
-                Gathering(
+                Post(
                     id = 12,
                     createdAt = "21.06.30",
                     title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
@@ -116,6 +117,13 @@ class GatheringFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.toolbar_create_post -> {
+                startActivity(Intent(requireContext(), EditPostActivity::class.java))
+            }
+            else -> requireActivity().finish()
+        }
+
         return super.onOptionsItemSelected(item)
     }
 }

@@ -1,6 +1,7 @@
 package com.minerdev.exermate.view.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -455,6 +456,10 @@ class ChatActivity : AppCompatActivity() {
         binding.recyclerView.scrollToPosition(adapter.itemCount - 1)
 
         binding.btnSend.setOnClickListener {
+            if (binding.etChat.text.isBlank()) {
+                return@setOnClickListener
+            }
+            Log.d("TAG", binding.etChat.text.toString())
 
             adapter.updateChatLogs(
                 ChatLog(
@@ -464,15 +469,14 @@ class ChatActivity : AppCompatActivity() {
                 )
             )
             binding.recyclerView.scrollToPosition(adapter.itemCount - 1)
+            binding.etChat.text.clear()
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
-            else -> {
-                finish()
-            }
+            else -> finish()
         }
 
         return super.onOptionsItemSelected(item)

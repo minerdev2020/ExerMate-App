@@ -87,10 +87,10 @@ class LoginActivity : AppCompatActivity() {
             val userPw = binding.etPw.text.toString()
 
             when {
-                userId.isEmpty() -> {
+                userId.isBlank() -> {
                     Toast.makeText(this, "이메일을 입력해주세요!", Toast.LENGTH_LONG).show()
                 }
-                userPw.isEmpty() -> {
+                userPw.isBlank() -> {
                     Toast.makeText(this, "비밀번호를 입력해주세요!", Toast.LENGTH_LONG).show()
                 }
                 else -> {

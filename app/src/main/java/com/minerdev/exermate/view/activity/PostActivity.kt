@@ -13,6 +13,8 @@ class PostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        val intent = intent
+        supportActionBar?.title = intent.getStringExtra("title") ?: ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.btnJoin.setOnClickListener {

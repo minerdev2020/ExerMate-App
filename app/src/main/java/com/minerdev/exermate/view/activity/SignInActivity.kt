@@ -39,7 +39,7 @@ class SignInActivity : AppCompatActivity() {
         userPw: String,
         nickname: String
     ) {
-        if (userId.isNotEmpty() && userPw.isNotEmpty() && nickname.isNotEmpty()) {
+        if (userId.isNotBlank() && userPw.isNotBlank() && nickname.isNotBlank()) {
             AuthService.register(userId, userPw, nickname,
                 { _: Int, response: String ->
                     val data = JSONObject(response)

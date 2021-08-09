@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.minerdev.exermate.databinding.ItemGatheringBinding
-import com.minerdev.exermate.model.Gathering
+import com.minerdev.exermate.databinding.ItemPostBinding
+import com.minerdev.exermate.model.Post
 
-class GatheringAdapter(diffCallBack: DiffCallBack) :
-    ListAdapter<Gathering, GatheringAdapter.ViewHolder>(diffCallBack) {
+class PostAdapter(diffCallBack: DiffCallBack) :
+    ListAdapter<Post, PostAdapter.ViewHolder>(diffCallBack) {
     lateinit var clickListener: OnItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemGatheringBinding.inflate(
+        val binding = ItemPostBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -32,7 +32,7 @@ class GatheringAdapter(diffCallBack: DiffCallBack) :
     }
 
     class ViewHolder(
-        private val binding: ItemGatheringBinding,
+        private val binding: ItemPostBinding,
         listener: OnItemClickListener
     ) :
         RecyclerView.ViewHolder(binding.root) {
@@ -43,18 +43,18 @@ class GatheringAdapter(diffCallBack: DiffCallBack) :
             }
         }
 
-        fun bind(gathering: Gathering) {
-            binding.tvCreatedAt.text = gathering.createdAt
-            binding.tvTitle.text = gathering.title
+        fun bind(post: Post) {
+            binding.tvCreatedAt.text = post.createdAt
+            binding.tvTitle.text = post.title
         }
     }
 
-    class DiffCallBack : DiffUtil.ItemCallback<Gathering>() {
-        override fun areItemsTheSame(oldItem: Gathering, newItem: Gathering): Boolean {
+    class DiffCallBack : DiffUtil.ItemCallback<Post>() {
+        override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Gathering, newItem: Gathering): Boolean {
+        override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
             return oldItem == newItem
         }
     }

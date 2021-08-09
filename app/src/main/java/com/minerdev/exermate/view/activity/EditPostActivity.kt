@@ -1,46 +1,22 @@
 package com.minerdev.exermate.view.activity
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.minerdev.exermate.R
-import com.minerdev.exermate.databinding.ActivityGoalModifyBinding
-import com.minerdev.exermate.view.fragment.TodayGoalFragment
+import com.minerdev.exermate.databinding.ActivityEditPostBinding
 
-class GoalModifyActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityGoalModifyBinding.inflate(layoutInflater) }
-    private val items = listOf("걷기", "달리기", "사이클")
+class EditPostActivity : AppCompatActivity() {
+    private val binding by lazy { ActivityEditPostBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        binding.spinnerType.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
-
-        binding.btnOk.setOnClickListener {
-            super.finish()
-        }
-
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
-
-        val intent = intent
-        val mode = intent.getIntExtra("mode", 0)
-        if (mode == TodayGoalFragment.ADD_MODE) {
-            // 추가 코드
-            supportActionBar?.title = "목표 추가"
-
-        } else {
-            // 수정 코드
-            supportActionBar?.title = "목표 수정"
-            val id = intent.getIntExtra("id", 0)
-        }
     }
 
     override fun finish() {
@@ -59,9 +35,17 @@ class GoalModifyActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_edit_post, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
+            R.id.toolbar_send_post -> {
+                super.finish()
+            }
             else -> finish()
         }
         return super.onOptionsItemSelected(item)
