@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.minerdev.exermate">
 
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exermate">
+        <activity
+            android:name=".view.activity.GoalSettingActivity"
+            android:exported="true" />
         <activity android:name=".view.activity.EditPostActivity" />
         <activity android:name=".view.activity.ChatActivity" />
         <activity android:name=".view.activity.PostActivity" />
@@ -26,5 +31,4 @@
             android:name=".view.activity.MainActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
     </application>
-
 </manifest>

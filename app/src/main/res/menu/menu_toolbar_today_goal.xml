@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/toolbar_add_goal"
+        android:id="@+id/toolbar_more_menu"
         android:enabled="true"
-        android:icon="@drawable/ic_round_add_24"
-        android:title="목표 추가"
+        android:icon="@drawable/ic_round_more_vert_24"
+        android:title="더보기"
         app:showAsAction="always" />
 </menu>
