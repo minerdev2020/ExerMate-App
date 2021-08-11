@@ -8,6 +8,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:background="#FFAACCFF"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
@@ -21,7 +22,8 @@
             android:id="@+id/et_chat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:maxLines="3" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_send"

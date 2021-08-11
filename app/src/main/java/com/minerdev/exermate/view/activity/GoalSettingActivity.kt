@@ -1,6 +1,8 @@
 package com.minerdev.exermate.view.activity
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +18,25 @@ class GoalSettingActivity : AppCompatActivity() {
 
         supportActionBar?.title = "목표 설정"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
+        binding.btnDone.setOnClickListener {
+            val goalSteps = binding.etGoalSteps.text.toString().toInt()
+
+            val sharedPreferences = getSharedPreferences("todayGoal", MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putInt("goalSteps", goalSteps)
+            editor.apply()
+
+            val intent = Intent(this, MainActivity::class.java).apply {
+                putExtra("goalSteps", goalSteps)
+            }
+            setResult(Activity.RESULT_OK, intent)
+            super.finish()
+        }
     }
 
     override fun finish() {

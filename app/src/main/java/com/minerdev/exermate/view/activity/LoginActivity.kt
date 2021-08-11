@@ -99,9 +99,10 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnSignIn.setOnClickListener {
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
+        binding.btnSignUp.setOnClickListener {
+            binding.etId.setText("")
+            binding.etPw.setText("")
+            startActivity(Intent(this, SignUpActivity::class.java))
         }
     }
 

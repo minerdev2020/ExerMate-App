@@ -10,7 +10,9 @@ import com.minerdev.exermate.R
 import com.minerdev.exermate.adapter.SectionPageAdapter
 import com.minerdev.exermate.databinding.ActivityMainBinding
 import com.minerdev.exermate.utils.Constants
-import com.minerdev.exermate.view.fragment.*
+import com.minerdev.exermate.view.fragment.GatheringFragment
+import com.minerdev.exermate.view.fragment.SettingFragment
+import com.minerdev.exermate.view.fragment.TodayGoalFragment
 
 class MainActivity : AppCompatActivity() {
     private var backPressedTime: Long = 0

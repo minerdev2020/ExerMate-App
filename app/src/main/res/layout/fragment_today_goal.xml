@@ -40,7 +40,7 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/tv_now_steps"
+            android:id="@+id/tv_current_steps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6789"

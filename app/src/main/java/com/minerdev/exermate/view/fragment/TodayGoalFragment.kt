@@ -1,6 +1,7 @@
 package com.minerdev.exermate.view.fragment
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -17,6 +18,8 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.components.XAxis
@@ -27,14 +30,28 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.FragmentTodayGoalBinding
 import com.minerdev.exermate.view.activity.GoalSettingActivity
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TodayGoalFragment : Fragment(), SensorEventListener {
     private val labels = listOf("일", "월", "화", "수", "목", "금", "토")
+    private val requestActivity =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                if (intent != null) {
+                    goalSteps = intent.getIntExtra("goalSteps", 10000)
+                    refreshGoalSteps()
+                }
+            }
+        }
 
     private val binding by lazy { FragmentTodayGoalBinding.inflate(layoutInflater) }
     private val sensorManager by lazy { requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager }
     private val stepCountSensor by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) }
 
+    private var dayOfWeek = -1
+    private var goalSteps = 100
     private var currentSteps = 0
     private var startSteps = 0
 
@@ -44,9 +61,14 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
     ): View {
         setHasOptionsMenu(true)
 
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("todayGoal", AppCompatActivity.MODE_PRIVATE)
+        dayOfWeek = sharedPreferences.getInt("dayOfWeek", -1)
+        goalSteps = sharedPreferences.getInt("goalSteps", 10000)
+        startSteps = sharedPreferences.getInt("startSteps", 0)
+
         if (stepCountSensor == null) {
-            Toast.makeText(requireContext(), "걸음수 센서가 존재하지않습니다!", Toast.LENGTH_LONG).show()
-            requireActivity().finishAffinity()
+            Toast.makeText(requireContext(), "걸음수 센서가 존재하지 않습니다!", Toast.LENGTH_LONG).show()
 
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -68,7 +90,7 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
             }
         }
 
-        val dataList = arrayListOf(1000, 2000, 3000, 4000, 5000, 10000, 6000)
+        val dataList = MutableList(7) { 0 }
         drawBarChart(dataList)
 
         return binding.root
@@ -87,7 +109,7 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.toolbar_more_menu -> {
-                startActivity(Intent(requireContext(), GoalSettingActivity::class.java))
+                requestActivity.launch(Intent(requireContext(), GoalSettingActivity::class.java))
             }
             else -> requireActivity().finish()
         }
@@ -131,21 +153,61 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
-            if (startSteps == 0) {
+            val calendar = Calendar.getInstance()
+            val nowDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
+
+            if (nowDayOfWeek != dayOfWeek) {
+                dayOfWeek = nowDayOfWeek
                 startSteps = event.values[0].toInt()
+
+                val sharedPreferences =
+                    requireActivity().getSharedPreferences(
+                        "todayGoal",
+                        AppCompatActivity.MODE_PRIVATE
+                    )
+
+                val editor = sharedPreferences.edit()
+                editor.putInt("dayOfWeek", dayOfWeek)
+                editor.putInt("startSteps", startSteps)
+                editor.apply()
             }
 
             currentSteps = event.values[0].toInt() - startSteps
-            binding.tvNowSteps.text = currentSteps.toString()
-            binding.tvProgress.text = (currentSteps / 10000).toString() + "%"
+            binding.tvCurrentSteps.text = "$currentSteps"
+            binding.tvProgress.text = "${currentSteps * 100 / goalSteps}%"
+            binding.tvGoalSteps.text = "/$goalSteps 걸음"
+            binding.progressBar.progress = currentSteps * 100 / goalSteps
+
+            val dataList = MutableList(7) { 0 }
+            dataList[dayOfWeek] = currentSteps
+            val entryList = ArrayList<BarEntry>()
+            for ((i, data) in dataList.withIndex()) {
+                entryList.add(BarEntry(i.toFloat(), data.toFloat()))
+            }
+
+            val barDataSet = BarDataSet(entryList, "StepDataSet")
+            val barData = BarData(barDataSet)
+
+            binding.barChart.data = barData
+            binding.barChart.notifyDataSetChanged()
+            binding.barChart.invalidate()
+
             Log.d("TAG", "move $currentSteps")
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    private fun refreshGoalSteps() {
+        binding.tvProgress.text = "${currentSteps * 100 / goalSteps}%"
+        binding.tvGoalSteps.text = "/$goalSteps 걸음"
+        binding.progressBar.progress = currentSteps * 100 / goalSteps
+
+        binding.barChart.axisLeft.axisMaximum = goalSteps * 1.1F
+        binding.barChart.invalidate()
     }
 
-    private fun drawBarChart(dataList: ArrayList<Int>) {
+    private fun drawBarChart(dataList: MutableList<Int>) {
         val entryList = ArrayList<BarEntry>()
         for ((i, data) in dataList.withIndex()) {
             entryList.add(BarEntry(i.toFloat(), data.toFloat()))
@@ -161,7 +223,7 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
             description = null
             legend.isEnabled = false
             axisLeft.axisMinimum = 0F
-            axisLeft.axisMaximum = 11000F
+            axisLeft.axisMaximum = goalSteps * 1.1F
             axisRight.setDrawLabels(false)
             axisRight.setDrawGridLines(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM

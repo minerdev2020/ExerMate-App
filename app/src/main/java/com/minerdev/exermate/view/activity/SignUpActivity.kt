@@ -6,14 +6,14 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.minerdev.exermate.databinding.ActivitySignInBinding
+import com.minerdev.exermate.databinding.ActivitySignUpBinding
 import com.minerdev.exermate.network.AuthService
 import com.minerdev.exermate.utils.Constants
 import org.json.JSONObject
 import java.util.regex.Pattern
 
-class SignInActivity : AppCompatActivity() {
-    private val binding by lazy { ActivitySignInBinding.inflate(layoutInflater) }
+class SignUpActivity : AppCompatActivity() {
+    private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +66,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-        binding.btnSignIn.setOnClickListener {
+        binding.btnSignUp.setOnClickListener {
             val userId = binding.etId.text.toString()
             val userPw = binding.etPw.text.toString()
             val nickname = binding.etNickname.text.toString()

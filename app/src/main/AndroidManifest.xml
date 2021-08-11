@@ -12,12 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Exermate">
         <activity
+            android:name=".view.activity.UsetInfoActivity"
+            android:exported="true" />
+        <activity
             android:name=".view.activity.GoalSettingActivity"
             android:exported="true" />
         <activity android:name=".view.activity.EditPostActivity" />
         <activity android:name=".view.activity.ChatActivity" />
         <activity android:name=".view.activity.PostActivity" />
-        <activity android:name=".view.activity.SignInActivity" />
+        <activity android:name=".view.activity.SignUpActivity" />
         <activity
             android:name=".view.activity.LoginActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
@@ -31,4 +34,5 @@
             android:name=".view.activity.MainActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
     </application>
+
 </manifest>
