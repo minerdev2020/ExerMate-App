@@ -94,6 +94,9 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
 
         if (prevDayOfWeek != currentDayOfWeek) {
             dateChanged()
+
+        } else {
+            dayOfWeek = currentDayOfWeek
         }
 
         if (stepCountSensor == null) {
