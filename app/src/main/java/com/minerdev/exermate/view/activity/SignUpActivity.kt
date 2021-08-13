@@ -80,17 +80,24 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun setupEditTexts() {
         binding.etId.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
-            val pattern = Pattern.compile("^[a-zA-Z0-9]*$")
+            val pattern = Pattern.compile("^[a-zA-Z0-9@._]*$")
             if (charSequence == "" || pattern.matcher(charSequence).matches()) {
                 charSequence
             } else ""
-        }, InputFilter.LengthFilter(8))
+        }, InputFilter.LengthFilter(30))
 
         binding.etPw.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
+            val pattern = Pattern.compile("^[a-zA-Z0-9!@#$%^&*+~-]*$")
+            if (charSequence == "" || pattern.matcher(charSequence).matches()) {
+                charSequence
+            } else ""
+        }, InputFilter.LengthFilter(20))
+
+        binding.etNickname.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
             val pattern = Pattern.compile("^[a-zA-Z0-9]*$")
             if (charSequence == "" || pattern.matcher(charSequence).matches()) {
                 charSequence
             } else ""
-        }, InputFilter.LengthFilter(8))
+        }, InputFilter.LengthFilter(10))
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.SignUpActivity">
+    tools:context=".view.activity.UserInfoActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -74,12 +74,12 @@
         tools:layout_editor_absoluteX="-16dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_sign_up"
+            android:id="@+id/btn_done"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="회원가입"
-            app:icon="@drawable/ic_round_account_circle_24" />
+            android:text="저장하기"
+            app:icon="@drawable/ic_round_done_24" />
 
         <Space
             android:layout_width="50dp"

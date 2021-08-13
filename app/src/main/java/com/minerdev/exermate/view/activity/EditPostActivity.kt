@@ -15,7 +15,7 @@ class EditPostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        supportActionBar?.title = ""
+        supportActionBar?.title = "모집글 작성"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

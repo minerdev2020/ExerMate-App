@@ -3,9 +3,7 @@ package com.minerdev.exermate.view.fragment
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -30,6 +28,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.FragmentTodayGoalBinding
 import com.minerdev.exermate.view.activity.GoalSettingActivity
+import java.lang.Float.max
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -45,14 +44,21 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
                 }
             }
         }
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == Intent.ACTION_DATE_CHANGED) {
+                dateChanged()
+            }
+        }
+    }
 
     private val binding by lazy { FragmentTodayGoalBinding.inflate(layoutInflater) }
     private val sensorManager by lazy { requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager }
     private val stepCountSensor by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) }
 
     private var dayOfWeek = -1
-    private var goalSteps = 100
-    private var currentSteps = 0
+    private var goalSteps = 10000
+    private var currentSteps = 1000
     private var startSteps = 0
 
     override fun onCreateView(
@@ -63,9 +69,32 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
 
         val sharedPreferences =
             requireActivity().getSharedPreferences("todayGoal", AppCompatActivity.MODE_PRIVATE)
-        dayOfWeek = sharedPreferences.getInt("dayOfWeek", -1)
+        startSteps = sharedPreferences.getInt("startSteps", -1)
         goalSteps = sharedPreferences.getInt("goalSteps", 10000)
-        startSteps = sharedPreferences.getInt("startSteps", 0)
+
+        binding.tvGoalSteps.text = goalSteps.toString()
+
+        val dataList = MutableList(7) { 0 }
+        initBarChart(dataList)
+
+        val intentFilter = IntentFilter(Intent.ACTION_DATE_CHANGED)
+        requireActivity().registerReceiver(receiver, intentFilter)
+
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("todayGoal", AppCompatActivity.MODE_PRIVATE)
+        val prevDayOfWeek = sharedPreferences.getInt("dayOfWeek", -1)
+        val calendar = Calendar.getInstance()
+        val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
+
+        if (prevDayOfWeek != currentDayOfWeek) {
+            dateChanged()
+        }
 
         if (stepCountSensor == null) {
             Toast.makeText(requireContext(), "걸음수 센서가 존재하지 않습니다!", Toast.LENGTH_LONG).show()
@@ -89,16 +118,16 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
                 }
             }
         }
+    }
 
-        val dataList = MutableList(7) { 0 }
-        drawBarChart(dataList)
-
-        return binding.root
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        sensorManager.unregisterListener(this)
+        requireActivity().unregisterReceiver(receiver)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -153,21 +182,14 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
-            val calendar = Calendar.getInstance()
-            val nowDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
-
-            if (nowDayOfWeek != dayOfWeek) {
-                dayOfWeek = nowDayOfWeek
+            if (startSteps < 0) {
                 startSteps = event.values[0].toInt()
-
-                val sharedPreferences =
-                    requireActivity().getSharedPreferences(
-                        "todayGoal",
-                        AppCompatActivity.MODE_PRIVATE
-                    )
+                val sharedPreferences = requireActivity().getSharedPreferences(
+                    "todayGoal",
+                    AppCompatActivity.MODE_PRIVATE
+                )
 
                 val editor = sharedPreferences.edit()
-                editor.putInt("dayOfWeek", dayOfWeek)
                 editor.putInt("startSteps", startSteps)
                 editor.apply()
             }
@@ -178,19 +200,7 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
             binding.tvGoalSteps.text = "/$goalSteps 걸음"
             binding.progressBar.progress = currentSteps * 100 / goalSteps
 
-            val dataList = MutableList(7) { 0 }
-            dataList[dayOfWeek] = currentSteps
-            val entryList = ArrayList<BarEntry>()
-            for ((i, data) in dataList.withIndex()) {
-                entryList.add(BarEntry(i.toFloat(), data.toFloat()))
-            }
-
-            val barDataSet = BarDataSet(entryList, "StepDataSet")
-            val barData = BarData(barDataSet)
-
-            binding.barChart.data = barData
-            binding.barChart.notifyDataSetChanged()
-            binding.barChart.invalidate()
+            refreshBarChart()
 
             Log.d("TAG", "move $currentSteps")
         }
@@ -203,11 +213,12 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
         binding.tvGoalSteps.text = "/$goalSteps 걸음"
         binding.progressBar.progress = currentSteps * 100 / goalSteps
 
-        binding.barChart.axisLeft.axisMaximum = goalSteps * 1.1F
+        binding.barChart.axisLeft.axisMaximum =
+            max(goalSteps * 1.1F, binding.barChart.data.yMax * 1.1F)
         binding.barChart.invalidate()
     }
 
-    private fun drawBarChart(dataList: MutableList<Int>) {
+    private fun initBarChart(dataList: MutableList<Int>) {
         val entryList = ArrayList<BarEntry>()
         for ((i, data) in dataList.withIndex()) {
             entryList.add(BarEntry(i.toFloat(), data.toFloat()))
@@ -223,7 +234,8 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
             description = null
             legend.isEnabled = false
             axisLeft.axisMinimum = 0F
-            axisLeft.axisMaximum = goalSteps * 1.1F
+            binding.barChart.axisLeft.axisMaximum =
+                max(goalSteps * 1.1F, binding.barChart.data.yMax * 1.1F)
             axisRight.setDrawLabels(false)
             axisRight.setDrawGridLines(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -238,5 +250,59 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
         }
 
         barChart.invalidate()
+    }
+
+    private fun refreshBarChart() {
+        val dataList = MutableList(7) { 0 }
+        dataList[dayOfWeek] = currentSteps
+        val entryList = ArrayList<BarEntry>()
+        for ((i, data) in dataList.withIndex()) {
+            entryList.add(BarEntry(i.toFloat(), data.toFloat()))
+        }
+
+        val barDataSet = BarDataSet(entryList, "StepDataSet")
+        val barData = BarData(barDataSet)
+
+        binding.barChart.data = barData
+        binding.barChart.notifyDataSetChanged()
+        binding.barChart.invalidate()
+    }
+
+    private fun dateChanged() {
+        val calendar = Calendar.getInstance()
+        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        startSteps = -1
+        currentSteps = 0
+
+        binding.tvCurrentSteps.text = "$currentSteps"
+        binding.tvProgress.text = "${currentSteps * 100 / goalSteps}%"
+        binding.tvGoalSteps.text = "/$goalSteps 걸음"
+        binding.progressBar.progress = currentSteps * 100 / goalSteps
+
+        if (dayOfWeek == 0) {
+            val dataList = MutableList(7) { 0 }
+            dataList[dayOfWeek] = currentSteps
+            val entryList = ArrayList<BarEntry>()
+            for ((i, data) in dataList.withIndex()) {
+                entryList.add(BarEntry(i.toFloat(), data.toFloat()))
+            }
+
+            val barDataSet = BarDataSet(entryList, "StepDataSet")
+            val barData = BarData(barDataSet)
+
+            binding.barChart.data = barData
+            binding.barChart.notifyDataSetChanged()
+            binding.barChart.invalidate()
+        }
+
+        val sharedPreferences =
+            requireActivity().getSharedPreferences(
+                "todayGoal",
+                AppCompatActivity.MODE_PRIVATE
+            )
+
+        val editor = sharedPreferences.edit()
+        editor.putInt("dayOfWeek", dayOfWeek)
+        editor.apply()
     }
 }

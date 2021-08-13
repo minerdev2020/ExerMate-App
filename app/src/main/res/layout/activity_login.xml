@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="이메일 입력"
-                android:inputType="textShortMessage"
+                android:inputType="textEmailAddress"
                 android:privateImeOptions="defaultInputmode=english" />
         </com.google.android.material.textfield.TextInputLayout>
 

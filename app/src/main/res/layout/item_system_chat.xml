@@ -9,9 +9,10 @@
         android:id="@+id/tv_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="#EEEEEEEE"
-        android:padding="5dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="#AAEEEEEE"
+        android:padding="7dp"
         android:text="채팅 내용. 채팅 내용."
         android:textSize="15sp" />
 </LinearLayout>

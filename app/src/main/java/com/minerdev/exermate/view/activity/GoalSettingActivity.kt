@@ -16,7 +16,7 @@ class GoalSettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        supportActionBar?.title = "목표 설정"
+        supportActionBar?.title = "목표 걸음수 설정"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.btnBack.setOnClickListener {
