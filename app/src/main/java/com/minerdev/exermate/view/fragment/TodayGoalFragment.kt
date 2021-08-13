@@ -65,8 +65,6 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setHasOptionsMenu(true)
-
         val sharedPreferences =
             requireActivity().getSharedPreferences("todayGoal", AppCompatActivity.MODE_PRIVATE)
         startSteps = sharedPreferences.getInt("startSteps", -1)
@@ -79,6 +77,8 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
 
         val intentFilter = IntentFilter(Intent.ACTION_DATE_CHANGED)
         requireActivity().registerReceiver(receiver, intentFilter)
+
+        setHasOptionsMenu(true)
 
         return binding.root
     }

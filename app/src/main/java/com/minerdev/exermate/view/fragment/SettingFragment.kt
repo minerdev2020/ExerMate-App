@@ -9,15 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.FragmentSettingBinding
-import com.minerdev.exermate.network.AuthService
+import com.minerdev.exermate.network.LoadImage
 import com.minerdev.exermate.utils.Constants
 import com.minerdev.exermate.view.activity.UserInfoActivity
-import org.json.JSONObject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SettingFragment : Fragment() {
     private val binding by lazy { FragmentSettingBinding.inflate(layoutInflater) }
@@ -56,6 +58,16 @@ class SettingFragment : Fragment() {
                 }
             }
 
+        binding.tvUserEmail.text = Constants.USER_EMAIL
+        binding.tvUserInfo.text = "온라인"
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val bitmap = withContext(Dispatchers.IO) {
+                LoadImage.get("https://i.imgur.com/q1jbHAu.jpeg")
+            }
+            binding.ivProfile.setImageBitmap(bitmap)
+        }
+
         setHasOptionsMenu(false)
 
         return binding.root
@@ -63,8 +75,8 @@ class SettingFragment : Fragment() {
 
     private fun tryLogout() {
         val sharedPreferences = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE)
-        val userId = sharedPreferences.getString("user_id", "") ?: ""
-        Log.d(Constants.TAG, "logout : $userId")
+        val userEmail = sharedPreferences.getString("userEmail", "") ?: ""
+        Log.d(Constants.TAG, "logout : $userEmail")
 
         if (userId.isNotEmpty()) {
             AuthService.logout(userId,

@@ -68,7 +68,7 @@ class UserInfoActivity : AppCompatActivity() {
     }
 
     private fun setupEditTexts() {
-        binding.etId.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
+        binding.etEmail.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
             val pattern = Pattern.compile("^[a-zA-Z0-9@._]*$")
             if (charSequence == "" || pattern.matcher(charSequence).matches()) {
                 charSequence

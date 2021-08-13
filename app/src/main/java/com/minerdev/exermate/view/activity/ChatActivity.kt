@@ -450,6 +450,20 @@ class ChatActivity : AppCompatActivity() {
                     text = "hihihihihihihihihi",
                     type = 2
                 ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "https://i.imgur.com/q1jbHAu.jpeg",
+                    type = 3
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "https://i.imgur.com/q1jbHAu.jpeg",
+                    type = 4
+                ),
             )
         )
         adapter.initChatLogs(chatLogs)

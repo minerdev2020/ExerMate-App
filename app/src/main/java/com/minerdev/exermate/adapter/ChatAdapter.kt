@@ -4,16 +4,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.minerdev.exermate.databinding.ItemChatBinding
-import com.minerdev.exermate.databinding.ItemMyChatBinding
-import com.minerdev.exermate.databinding.ItemSystemChatBinding
+import com.minerdev.exermate.databinding.*
 import com.minerdev.exermate.model.ChatLog
+import com.minerdev.exermate.network.LoadImage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
     companion object {
         const val SYSTEM_CHAT_ITEM = 0
         const val CHAT_ITEM = 1
         const val MY_CHAT_ITEM = 2
+        const val CHAT_PHOTO_ITEM = 3
+        const val MY_CHAT_PHOTO_ITEM = 4
     }
 
     private val chatLogs = ArrayList<ChatLog>()
@@ -52,6 +57,26 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
                 )
 
                 ItemMyChatViewHolder(binding)
+            }
+
+            CHAT_PHOTO_ITEM -> {
+                val binding = ItemChatPhotoBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+
+                ItemChatPhotoViewHolder(binding)
+            }
+
+            MY_CHAT_PHOTO_ITEM -> {
+                val binding = ItemMyChatPhotoBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+
+                ItemMyChatPhotoViewHolder(binding)
             }
 
             else -> {
@@ -96,6 +121,34 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         override fun bind(chatLog: ChatLog) {
             binding.tvCreatedAt.text = chatLog.createdAt
             binding.tvChat.text = chatLog.text
+        }
+    }
+
+    class ItemChatPhotoViewHolder(private val binding: ItemChatPhotoBinding) :
+        ViewHolder(binding.root) {
+        override fun bind(chatLog: ChatLog) {
+            binding.tvCreatedAt.text = chatLog.createdAt
+
+            CoroutineScope(Dispatchers.Main).launch {
+                val bitmap = withContext(Dispatchers.IO) {
+                    LoadImage.get(chatLog.text)
+                }
+                binding.ivPhoto.setImageBitmap(bitmap)
+            }
+        }
+    }
+
+    class ItemMyChatPhotoViewHolder(private val binding: ItemMyChatPhotoBinding) :
+        ViewHolder(binding.root) {
+        override fun bind(chatLog: ChatLog) {
+            binding.tvCreatedAt.text = chatLog.createdAt
+
+            CoroutineScope(Dispatchers.Main).launch {
+                val bitmap = withContext(Dispatchers.IO) {
+                    LoadImage.get(chatLog.text)
+                }
+                binding.ivPhoto.setImageBitmap(bitmap)
+            }
         }
     }
 }

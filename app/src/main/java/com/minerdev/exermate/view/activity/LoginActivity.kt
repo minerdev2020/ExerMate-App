@@ -23,13 +23,11 @@ class LoginActivity : AppCompatActivity() {
 
         if (checkLoginStatus()) {
             val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
-            val id = sharedPreferences.getString("id", "") ?: ""
-            val userId = sharedPreferences.getString("user_id", "") ?: ""
+            val userEmail = sharedPreferences.getString("userEmail", "") ?: ""
 
-            Constants.ID = id
-            Constants.USER_ID = userId
+            Constants.USER_EMAIL = userEmail
 
-            Log.d(Constants.TAG, "login : $userId")
+            Log.d(Constants.TAG, "login : $userEmail")
             startActivity(Intent(this, MainActivity::class.java))
         }
 
@@ -78,36 +76,36 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkLoginStatus(): Boolean {
         val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
-        return sharedPreferences != null && sharedPreferences.contains("user_id")
+        return sharedPreferences != null && sharedPreferences.contains("userEmail")
     }
 
     private fun setupButtons() {
         binding.btnLogin.setOnClickListener {
-            val userId = binding.etId.text.toString()
+            val userEmail = binding.etEmail.text.toString()
             val userPw = binding.etPw.text.toString()
 
             when {
-                userId.isBlank() -> {
+                userEmail.isBlank() -> {
                     Toast.makeText(this, "이메일을 입력해주세요!", Toast.LENGTH_LONG).show()
                 }
                 userPw.isBlank() -> {
                     Toast.makeText(this, "비밀번호를 입력해주세요!", Toast.LENGTH_LONG).show()
                 }
                 else -> {
-                    tryLogin(userId, userPw)
+                    tryLogin(userEmail, userPw)
                 }
             }
         }
 
         binding.btnSignUp.setOnClickListener {
-            binding.etId.setText("")
+            binding.etEmail.setText("")
             binding.etPw.setText("")
             startActivity(Intent(this, SignUpActivity::class.java))
         }
     }
 
     private fun setupEditTexts() {
-        binding.etId.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
+        binding.etEmail.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
             val pattern = Pattern.compile("^[a-zA-Z0-9@._]*$")
             if (charSequence == "" || pattern.matcher(charSequence).matches()) {
                 charSequence

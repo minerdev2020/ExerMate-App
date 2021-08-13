@@ -67,7 +67,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun setupButtons() {
         binding.btnSignUp.setOnClickListener {
-            val userId = binding.etId.text.toString()
+            val userId = binding.etEmail.text.toString()
             val userPw = binding.etPw.text.toString()
             val nickname = binding.etNickname.text.toString()
             tryRegister(userId, userPw, nickname)
@@ -79,7 +79,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun setupEditTexts() {
-        binding.etId.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
+        binding.etEmail.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
             val pattern = Pattern.compile("^[a-zA-Z0-9@._]*$")
             if (charSequence == "" || pattern.matcher(charSequence).matches()) {
                 charSequence
