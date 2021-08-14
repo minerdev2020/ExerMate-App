@@ -8,15 +8,23 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:background="#FFAACCFF"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="#FFAACCFF" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_add_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_500"
+            android:elevation="5dp"
+            android:src="@drawable/ic_round_add_24" />
 
         <EditText
             android:id="@+id/et_chat"

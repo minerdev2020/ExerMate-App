@@ -58,8 +58,6 @@ class MainActivity : AppCompatActivity() {
         adapter.addFragment(GatheringFragment(), "운동 모임 찾기")
         adapter.addFragment(SettingFragment(), "설정")
         binding.viewPager.adapter = adapter
-
-        setupBottomNavigationView()
     }
 
     private fun setupBottomNavigationView() {
