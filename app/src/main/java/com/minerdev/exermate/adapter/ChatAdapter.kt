@@ -21,6 +21,8 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         const val MY_CHAT_PHOTO_ITEM = 4
     }
 
+    lateinit var clickListener: (urlStr: String) -> Unit
+
     private val chatLogs = ArrayList<ChatLog>()
 
     fun initChatLogs(chatLogs: ArrayList<ChatLog>) {
@@ -66,7 +68,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
                     false
                 )
 
-                ItemChatPhotoViewHolder(binding)
+                ItemChatPhotoViewHolder(binding, clickListener)
             }
 
             MY_CHAT_PHOTO_ITEM -> {
@@ -76,7 +78,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
                     false
                 )
 
-                ItemMyChatPhotoViewHolder(binding)
+                ItemMyChatPhotoViewHolder(binding, clickListener)
             }
 
             else -> {
@@ -124,7 +126,10 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         }
     }
 
-    class ItemChatPhotoViewHolder(private val binding: ItemChatPhotoBinding) :
+    class ItemChatPhotoViewHolder(
+        private val binding: ItemChatPhotoBinding,
+        private val listener: (urlStr: String) -> Unit
+    ) :
         ViewHolder(binding.root) {
         override fun bind(chatLog: ChatLog) {
             binding.tvCreatedAt.text = chatLog.createdAt
@@ -135,10 +140,17 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
                 }
                 binding.ivPhoto.setImageBitmap(bitmap)
             }
+
+            binding.ivPhoto.setOnClickListener {
+                listener(chatLog.text)
+            }
         }
     }
 
-    class ItemMyChatPhotoViewHolder(private val binding: ItemMyChatPhotoBinding) :
+    class ItemMyChatPhotoViewHolder(
+        private val binding: ItemMyChatPhotoBinding,
+        private val listener: (urlStr: String) -> Unit
+    ) :
         ViewHolder(binding.root) {
         override fun bind(chatLog: ChatLog) {
             binding.tvCreatedAt.text = chatLog.createdAt
@@ -148,6 +160,10 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
                     LoadImage.get(chatLog.text)
                 }
                 binding.ivPhoto.setImageBitmap(bitmap)
+            }
+
+            binding.ivPhoto.setOnClickListener {
+                listener(chatLog.text)
             }
         }
     }

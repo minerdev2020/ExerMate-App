@@ -1,5 +1,6 @@
 package com.minerdev.exermate.view.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -44,399 +45,7 @@ class ChatActivity : AppCompatActivity() {
                     fromId = 1,
                     createdAt = "오전 12:01",
                     text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
                     type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
                 ),
                 ChatLog(
                     roomId = 1,
@@ -466,8 +75,57 @@ class ChatActivity : AppCompatActivity() {
                     text = "https://i.imgur.com/q1jbHAu.jpeg",
                     type = 4
                 ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "hihihihihihihihihi",
+                    type = 1
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "hihihihihihihihihi",
+                    type = 2
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "https://i.imgur.com/q1jbHAu.jpeg",
+                    type = 3
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "https://i.imgur.com/q1jbHAu.jpeg",
+                    type = 4
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "hihihihihihihihihi",
+                    type = 1
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "hihihihihihihihihi",
+                    type = 2
+                ),
             )
         )
+
+        adapter.clickListener = { urlStr ->
+            val intent = Intent(this, FullScreenPhotoActivity::class.java).apply {
+                putExtra("urlStr", urlStr)
+            }
+            startActivity(intent)
+        }
         adapter.initChatLogs(chatLogs)
 
         binding.btnSend.setOnClickListener {
