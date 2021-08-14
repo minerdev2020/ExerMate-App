@@ -61,10 +61,31 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
     private var currentSteps = 1000
     private var startSteps = 0
 
+    private var isFirst = true
+    private var alertDialog : AlertDialog? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val builder = AlertDialog.Builder(requireContext()).apply {
+            setTitle("앱 권한")
+            setMessage("해당 앱의 원활한 기능을 이용하시려면 애플리케이션 정보>권한에서 '신체 활동' 권한을 허용해 주십시오.")
+            setPositiveButton("권한설정") { dialog: DialogInterface, _ ->
+                val intent =
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(
+                        Uri.parse("package:" + requireContext().packageName)
+                    )
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            setNegativeButton("취소") { _, _ ->
+                return@setNegativeButton
+            }
+        }
+
+        alertDialog = builder.create()
+
         val sharedPreferences =
             requireActivity().getSharedPreferences("todayGoal", AppCompatActivity.MODE_PRIVATE)
         startSteps = sharedPreferences.getInt("startSteps", -1)
@@ -110,7 +131,17 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
                 )
 
                 if (permissionChecked != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), 101)
+                    if (isFirst) {
+                        isFirst = false
+                        requestPermissions(arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), 101)
+
+                    } else {
+                        alertDialog?.let {
+                            if (!it.isShowing) {
+                                it.show()
+                            }
+                        }
+                    }
 
                 } else {
                     sensorManager.registerListener(
@@ -119,6 +150,13 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
                         SensorManager.SENSOR_DELAY_GAME
                     )
                 }
+
+            } else {
+                sensorManager.registerListener(
+                    this,
+                    stepCountSensor,
+                    SensorManager.SENSOR_DELAY_GAME
+                )
             }
         }
     }
@@ -164,18 +202,11 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
                     )
 
                 } else {
-                    val alertDialog = AlertDialog.Builder(context)
-                    alertDialog.setTitle("앱 권한")
-                    alertDialog.setMessage("해당 앱의 원활한 기능을 이용하시려면 애플리케이션 정보>권한에서 '저장공간' 권한을 허용해 주십시오.")
-                    alertDialog.setPositiveButton("권한설정") { dialog: DialogInterface, _: Int ->
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(
-                            Uri.parse("package:" + requireContext().packageName)
-                        )
-                        startActivity(intent)
-                        dialog.cancel()
+                    alertDialog?.let {
+                        if (!it.isShowing) {
+                            it.show()
+                        }
                     }
-                    alertDialog.setNegativeButton("취소") { dialog: DialogInterface, _: Int -> dialog.cancel() }
-                    alertDialog.show()
                 }
 
             else -> {
