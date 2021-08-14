@@ -20,7 +20,9 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "단체 채팅방"
 
-        val manager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        val manager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false).apply {
+            stackFromEnd = true
+        }
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
 
@@ -467,7 +469,6 @@ class ChatActivity : AppCompatActivity() {
             )
         )
         adapter.initChatLogs(chatLogs)
-        binding.recyclerView.scrollToPosition(adapter.itemCount - 1)
 
         binding.btnSend.setOnClickListener {
             if (binding.etChat.text.isBlank()) {
