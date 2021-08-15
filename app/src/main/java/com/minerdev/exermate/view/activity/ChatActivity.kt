@@ -75,29 +75,54 @@ class ChatActivity : AppCompatActivity() {
                     roomId = 1,
                     fromId = 1,
                     createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
+                    text = "케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!",
+                    type = 5,
+                    nickname = "홍길동",
+                    profileUrl = "https://i.imgur.com/fCvxGeS.jpeg",
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "네가 선택한 프로젝트다 악으로 깡으로 버텨라!",
                     type = 1
                 ),
                 ChatLog(
                     roomId = 1,
                     fromId = 1,
                     createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
+                    text = "https://i.imgur.com/q1jbHAu.jpeg",
+                    type = 3
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "나는 자연인이다!!!!!",
                     type = 2
                 ),
                 ChatLog(
                     roomId = 1,
                     fromId = 1,
                     createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
+                    text = "https://i.imgur.com/q1jbHAu.jpeg",
+                    type = 4
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "이것은 테스트다",
+                    type = 5,
+                    nickname = "홍길동",
+                    profileUrl = "https://i.imgur.com/fCvxGeS.jpeg",
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 1,
+                    createdAt = "오전 12:01",
+                    text = "안녕하시기?",
                     type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
                 ),
                 ChatLog(
                     roomId = 1,
@@ -111,49 +136,9 @@ class ChatActivity : AppCompatActivity() {
                     fromId = 1,
                     createdAt = "오전 12:01",
                     text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = 4
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = 3
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = 4
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "hihihihihihihihihi",
-                    type = 2
+                    type = 6,
+                    nickname = "임꺽정",
+                    profileUrl = "https://i.imgur.com/Lc5VA8b.png",
                 ),
             )
         )

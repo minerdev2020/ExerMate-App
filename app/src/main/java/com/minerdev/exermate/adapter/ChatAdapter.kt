@@ -19,6 +19,8 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         const val MY_CHAT_ITEM = 2
         const val CHAT_PHOTO_ITEM = 3
         const val MY_CHAT_PHOTO_ITEM = 4
+        const val CHAT_START_ITEM = 5
+        const val CHAT_START_PHOTO_ITEM = 6
     }
 
     lateinit var clickListener: (urlStr: String) -> Unit
@@ -79,6 +81,26 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
                 )
 
                 ItemMyChatPhotoViewHolder(binding, clickListener)
+            }
+
+            CHAT_START_ITEM -> {
+                val binding = ItemChatStartBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+
+                ItemChatStartViewHolder(binding, clickListener)
+            }
+
+            CHAT_START_PHOTO_ITEM -> {
+                val binding = ItemChatStartPhotoBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+
+                ItemChatStartPhotoViewHolder(binding, clickListener)
             }
 
             else -> {
@@ -162,6 +184,58 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
                 binding.ivPhoto.setImageBitmap(bitmap)
             }
 
+            binding.ivPhoto.setOnClickListener {
+                listener(chatLog.text)
+            }
+        }
+    }
+
+    class ItemChatStartViewHolder(
+        private val binding: ItemChatStartBinding,
+        private val listener: (urlStr: String) -> Unit
+    ) :
+        ViewHolder(binding.root) {
+        override fun bind(chatLog: ChatLog) {
+            binding.tvNickname.text = chatLog.nickname
+            binding.tvCreatedAt.text = chatLog.createdAt
+            binding.tvChat.text = chatLog.text
+
+            CoroutineScope(Dispatchers.Main).launch {
+                val bitmap = withContext(Dispatchers.IO) {
+                    LoadImage.get(chatLog.profileUrl)
+                }
+                binding.ivProfile.setImageBitmap(bitmap)
+            }
+
+            binding.ivProfile.setOnClickListener {
+                listener(chatLog.profileUrl)
+            }
+        }
+    }
+
+    class ItemChatStartPhotoViewHolder(
+        private val binding: ItemChatStartPhotoBinding,
+        private val listener: (urlStr: String) -> Unit
+    ) :
+        ViewHolder(binding.root) {
+        override fun bind(chatLog: ChatLog) {
+            binding.tvNickname.text = chatLog.nickname
+            binding.tvCreatedAt.text = chatLog.createdAt
+
+            CoroutineScope(Dispatchers.Main).launch {
+                val profileBitmap = withContext(Dispatchers.IO) {
+                    LoadImage.get(chatLog.profileUrl)
+                }
+                val bitmap = withContext(Dispatchers.IO) {
+                    LoadImage.get(chatLog.text)
+                }
+                binding.ivProfile.setImageBitmap(profileBitmap)
+                binding.ivPhoto.setImageBitmap(bitmap)
+            }
+
+            binding.ivProfile.setOnClickListener {
+                listener(chatLog.profileUrl)
+            }
             binding.ivPhoto.setOnClickListener {
                 listener(chatLog.text)
             }

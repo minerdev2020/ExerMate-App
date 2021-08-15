@@ -8,7 +8,9 @@ data class ChatLog(
     var fromId: Int = 0,
     var createdAt: String = "",
     var text: String = "",
-    var type: Byte = 0
+    var type: Byte = 0,
+    var nickname: String = "",
+    var profileUrl: String = ""
 ) {
     fun toJson() = buildJsonObject {
         put("roomId", roomId)
