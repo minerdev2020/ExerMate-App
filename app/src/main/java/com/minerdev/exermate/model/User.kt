@@ -5,20 +5,16 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 @Serializable
-data class Goal(
+data class User(
     var id: Int = 0,
     var createdAt: String = "",
-    var updatedAt: String = "",
-    var current: Int = 0,
-    var goal: Int = 0,
-    var state: Byte = 0,
-    var type: String = ""
+    var email: String = "",
+    var nickname: String = "",
+    var profileUrl: String = ""
 ) {
     fun toJson() = buildJsonObject {
         put("id", id)
-        put("current", current)
-        put("goal", goal)
-        put("state", state)
-        put("type", type)
+        put("email", email)
+        put("nickname", nickname)
     }
 }

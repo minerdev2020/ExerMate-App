@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.minerdev.exermate.databinding.*
 import com.minerdev.exermate.model.ChatLog
+import com.minerdev.exermate.model.ChatRoom
+import com.minerdev.exermate.model.User
 import com.minerdev.exermate.network.LoadImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,17 +17,24 @@ import kotlinx.coroutines.withContext
 class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
     companion object {
         const val SYSTEM_CHAT_ITEM = 0
-        const val CHAT_ITEM = 1
-        const val MY_CHAT_ITEM = 2
-        const val CHAT_PHOTO_ITEM = 3
-        const val MY_CHAT_PHOTO_ITEM = 4
-        const val CHAT_START_ITEM = 5
-        const val CHAT_START_PHOTO_ITEM = 6
+        const val MY_CHAT_ITEM = 1
+        const val MY_CHAT_PHOTO_ITEM = 2
+        const val CHAT_START_ITEM = 3
+        const val CHAT_ITEM = 4
+        const val CHAT_START_PHOTO_ITEM = 5
+        const val CHAT_PHOTO_ITEM = 6
     }
 
     lateinit var clickListener: (urlStr: String) -> Unit
 
+    private val userInfo = HashMap<Int, User>()
     private val chatLogs = ArrayList<ChatLog>()
+
+    fun initChatRoom(chatRoom: ChatRoom) {
+        for (user in chatRoom.users) {
+            userInfo[user.id] = user
+        }
+    }
 
     fun initChatLogs(chatLogs: ArrayList<ChatLog>) {
         this.chatLogs.addAll(chatLogs)
@@ -116,7 +125,16 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(chatLogs[position])
+        val chatLog = chatLogs[position]
+
+        if (holder is ItemChatStartViewHolder || holder is ItemChatStartPhotoViewHolder) {
+            val nickname = userInfo[chatLog.fromId]?.nickname ?: ""
+            val profileUrl = userInfo[chatLog.fromId]?.profileUrl ?: ""
+            holder.bind(chatLog, nickname, profileUrl)
+
+        } else {
+            holder.bind(chatLog)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -124,7 +142,8 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
     }
 
     abstract class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        abstract fun bind(chatLog: ChatLog)
+        open fun bind(chatLog: ChatLog) {}
+        open fun bind(chatLog: ChatLog, nickname: String, profileUrl: String) {}
     }
 
     class ItemSystemChatViewHolder(private val binding: ItemSystemChatBinding) :
@@ -195,20 +214,20 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         private val listener: (urlStr: String) -> Unit
     ) :
         ViewHolder(binding.root) {
-        override fun bind(chatLog: ChatLog) {
-            binding.tvNickname.text = chatLog.nickname
+        override fun bind(chatLog: ChatLog, nickname: String, profileUrl: String) {
+            binding.tvNickname.text = nickname
             binding.tvCreatedAt.text = chatLog.createdAt
             binding.tvChat.text = chatLog.text
 
             CoroutineScope(Dispatchers.Main).launch {
                 val bitmap = withContext(Dispatchers.IO) {
-                    LoadImage.get(chatLog.profileUrl)
+                    LoadImage.get(profileUrl)
                 }
                 binding.ivProfile.setImageBitmap(bitmap)
             }
 
             binding.ivProfile.setOnClickListener {
-                listener(chatLog.profileUrl)
+                listener(profileUrl)
             }
         }
     }
@@ -218,13 +237,13 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         private val listener: (urlStr: String) -> Unit
     ) :
         ViewHolder(binding.root) {
-        override fun bind(chatLog: ChatLog) {
-            binding.tvNickname.text = chatLog.nickname
+        override fun bind(chatLog: ChatLog, nickname: String, profileUrl: String) {
+            binding.tvNickname.text = nickname
             binding.tvCreatedAt.text = chatLog.createdAt
 
             CoroutineScope(Dispatchers.Main).launch {
                 val profileBitmap = withContext(Dispatchers.IO) {
-                    LoadImage.get(chatLog.profileUrl)
+                    LoadImage.get(profileUrl)
                 }
                 val bitmap = withContext(Dispatchers.IO) {
                     LoadImage.get(chatLog.text)
@@ -234,7 +253,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
             }
 
             binding.ivProfile.setOnClickListener {
-                listener(chatLog.profileUrl)
+                listener(profileUrl)
             }
             binding.ivPhoto.setOnClickListener {
                 listener(chatLog.text)

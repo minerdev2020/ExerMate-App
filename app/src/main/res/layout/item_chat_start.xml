@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chatStartItem_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="start">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_profile"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_margin="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/profile_rounded_corners"
         tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
+        android:id="@+id/linearLayout5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="80dp"
+        android:orientation="vertical"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/iv_profile"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_nickname"
@@ -33,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_corners"
             android:backgroundTint="@color/white"
@@ -44,8 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="7dp"
-                android:maxWidth="300dp"
-                android:text="채팅 내용. 채팅 내용."
+                android:text="채팅 내용."
                 android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
@@ -54,9 +63,10 @@
         android:id="@+id/tv_createdAt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_marginStart="5dp"
         android:layout_marginBottom="2dp"
         android:text="오후 12:05"
-        android:textSize="10sp" />
-</LinearLayout>
-
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout5" />
+</androidx.constraintlayout.widget.ConstraintLayout>

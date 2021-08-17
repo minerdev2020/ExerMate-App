@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.minerdev.exermate.adapter.ChatAdapter
 import com.minerdev.exermate.databinding.ActivityChatBinding
 import com.minerdev.exermate.model.ChatLog
+import com.minerdev.exermate.model.ChatRoom
+import com.minerdev.exermate.model.User
 import com.minerdev.exermate.utils.Constants
 import java.io.File
 
@@ -69,76 +71,70 @@ class ChatActivity : AppCompatActivity() {
             listOf(
                 ChatLog(
                     text = "운동 싫어 님이 채팅방에 입장하셨으빈다.",
-                    type = 0
+                    type = ChatAdapter.SYSTEM_CHAT_ITEM.toByte()
                 ),
                 ChatLog(
                     roomId = 1,
                     fromId = 1,
                     createdAt = "오전 12:01",
                     text = "케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!",
-                    type = 5,
-                    nickname = "홍길동",
-                    profileUrl = "https://i.imgur.com/fCvxGeS.jpeg",
+                    type = ChatAdapter.CHAT_START_ITEM.toByte()
                 ),
                 ChatLog(
                     roomId = 1,
                     fromId = 1,
                     createdAt = "오전 12:01",
-                    text = "네가 선택한 프로젝트다 악으로 깡으로 버텨라!",
-                    type = 1
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = 3
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "나는 자연인이다!!!!!",
-                    type = 2
+                    text = "케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!",
+                    type = ChatAdapter.CHAT_ITEM.toByte()
                 ),
                 ChatLog(
                     roomId = 1,
                     fromId = 1,
                     createdAt = "오전 12:01",
                     text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = 4
+                    type = ChatAdapter.CHAT_PHOTO_ITEM.toByte()
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 2,
+                    createdAt = "오전 12:01",
+                    text = "케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!",
+                    type = ChatAdapter.MY_CHAT_ITEM.toByte()
+                ),
+                ChatLog(
+                    roomId = 1,
+                    fromId = 2,
+                    createdAt = "오전 12:01",
+                    text = "https://i.imgur.com/q1jbHAu.jpeg",
+                    type = ChatAdapter.MY_CHAT_PHOTO_ITEM.toByte()
                 ),
                 ChatLog(
                     roomId = 1,
                     fromId = 1,
                     createdAt = "오전 12:01",
                     text = "이것은 테스트다",
-                    type = 5,
-                    nickname = "홍길동",
-                    profileUrl = "https://i.imgur.com/fCvxGeS.jpeg",
+                    type = ChatAdapter.CHAT_START_ITEM.toByte()
                 ),
                 ChatLog(
                     roomId = 1,
                     fromId = 1,
                     createdAt = "오전 12:01",
                     text = "안녕하시기?",
-                    type = 1
+                    type = ChatAdapter.CHAT_ITEM.toByte()
                 ),
                 ChatLog(
                     roomId = 1,
                     fromId = 1,
                     createdAt = "오전 12:01",
                     text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = 3
+                    type = ChatAdapter.CHAT_PHOTO_ITEM.toByte()
                 ),
                 ChatLog(
                     roomId = 1,
-                    fromId = 1,
+                    fromId = 3,
                     createdAt = "오전 12:01",
                     text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = 6,
-                    nickname = "임꺽정",
-                    profileUrl = "https://i.imgur.com/Lc5VA8b.png",
+                    type = ChatAdapter.CHAT_START_PHOTO_ITEM.toByte()
                 ),
             )
         )
@@ -149,6 +145,27 @@ class ChatActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+        adapter.initChatRoom(
+            ChatRoom(
+                users = listOf(
+                    User(
+                        id = 1,
+                        nickname = "홍길동",
+                        profileUrl = "https://i.imgur.com/fCvxGeS.jpeg"
+                    ),
+                    User(
+                        id = 2,
+                        nickname = "아이언맨",
+                        profileUrl = "https://i.imgur.com/q1jbHAu.jpeg"
+                    ),
+                    User(
+                        id = 3,
+                        nickname = "임꺽정",
+                        profileUrl = "https://i.imgur.com/Lc5VA8b.png"
+                    )
+                )
+            )
+        )
         adapter.initChatLogs(chatLogs)
 
         binding.btnSend.setOnClickListener {
