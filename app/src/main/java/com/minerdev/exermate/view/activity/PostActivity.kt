@@ -13,12 +13,18 @@ class PostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val intent = intent
+        if (intent == null) {
+            finish()
+        }
+
         supportActionBar?.title = intent.getStringExtra("title") ?: "제목입니다"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.btnJoin.setOnClickListener {
-            startActivity(Intent(this, ChatActivity::class.java))
+            val intent = Intent(this, ChatActivity::class.java).apply {
+                putExtra("roomId", intent.getIntExtra("roomId", 0))
+            }
+            startActivity(intent)
         }
     }
 

@@ -2,15 +2,16 @@ package com.minerdev.exermate.view.activity
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +24,8 @@ import com.minerdev.exermate.model.ChatLog
 import com.minerdev.exermate.model.ChatRoom
 import com.minerdev.exermate.model.User
 import com.minerdev.exermate.utils.Constants
+import com.minerdev.exermate.utils.DBHelper
+import com.minerdev.exermate.utils.Time
 import java.io.File
 
 class ChatActivity : AppCompatActivity() {
@@ -54,12 +57,22 @@ class ChatActivity : AppCompatActivity() {
             }
         }
 
+    private lateinit var dbHelper: DBHelper
+    private lateinit var sqlDB: SQLiteDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        if (intent == null) {
+            finish()
+        }
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "단체 채팅방"
+
+        dbHelper = DBHelper(this)
+        sqlDB = dbHelper.writableDatabase
 
         val manager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false).apply {
             stackFromEnd = true
@@ -67,84 +80,27 @@ class ChatActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
 
-        val chatLogs = ArrayList<ChatLog>(
-            listOf(
-                ChatLog(
-                    text = "운동 싫어 님이 채팅방에 입장하셨으빈다.",
-                    type = ChatAdapter.SYSTEM_CHAT_ITEM.toByte()
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!",
-                    type = ChatAdapter.CHAT_START_ITEM.toByte()
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!",
-                    type = ChatAdapter.CHAT_ITEM.toByte()
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = ChatAdapter.CHAT_PHOTO_ITEM.toByte()
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 2,
-                    createdAt = "오전 12:01",
-                    text = "케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!케인인님 한판해요!",
-                    type = ChatAdapter.MY_CHAT_ITEM.toByte()
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 2,
-                    createdAt = "오전 12:01",
-                    text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = ChatAdapter.MY_CHAT_PHOTO_ITEM.toByte()
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "이것은 테스트다",
-                    type = ChatAdapter.CHAT_START_ITEM.toByte()
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "안녕하시기?",
-                    type = ChatAdapter.CHAT_ITEM.toByte()
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 1,
-                    createdAt = "오전 12:01",
-                    text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = ChatAdapter.CHAT_PHOTO_ITEM.toByte()
-                ),
-                ChatLog(
-                    roomId = 1,
-                    fromId = 3,
-                    createdAt = "오전 12:01",
-                    text = "https://i.imgur.com/q1jbHAu.jpeg",
-                    type = ChatAdapter.CHAT_START_PHOTO_ITEM.toByte()
-                ),
-            )
-        )
-
         adapter.clickListener = { urlStr ->
             val intent = Intent(this, FullScreenPhotoActivity::class.java).apply {
                 putExtra("urlStr", urlStr)
             }
             startActivity(intent)
         }
+
+        val roomId = intent.getIntExtra("roomId", 0)
+
+        val chatUsersFromDB = ArrayList<User>()
+        var cursor = sqlDB.rawQuery("select * from chatUsers where roomId = $roomId;", null)
+        while (cursor.moveToNext()) {
+            chatUsersFromDB.add(
+                User(
+                    id = cursor.getInt(cursor.getColumnIndex("userId")),
+                    nickname = cursor.getString(cursor.getColumnIndex("nickname")),
+                    profileUrl = cursor.getString(cursor.getColumnIndex("profileUrl"))
+                )
+            )
+        }
+        cursor.close()
         adapter.initChatRoom(
             ChatRoom(
                 users = listOf(
@@ -166,23 +122,50 @@ class ChatActivity : AppCompatActivity() {
                 )
             )
         )
-        adapter.initChatLogs(chatLogs)
+
+        val chatLogsFromDB = ArrayList<ChatLog>()
+        cursor = sqlDB.rawQuery("select * from chatLogs where roomId = $roomId;", null)
+        while (cursor.moveToNext()) {
+            chatLogsFromDB.add(
+                ChatLog(
+                    roomId = roomId,
+                    fromId = cursor.getInt(cursor.getColumnIndex("fromId")),
+                    createdAt = Time.convertTimestampToHMS(cursor.getLong(cursor.getColumnIndex("createdAt"))),
+                    text = cursor.getString(cursor.getColumnIndex("text")),
+                    type = cursor.getInt(cursor.getColumnIndex("type")).toByte()
+                )
+            )
+        }
+        cursor.close()
+        adapter.initChatLogs(chatLogsFromDB)
 
         binding.btnSend.setOnClickListener {
-            if (binding.etChat.text.isBlank()) {
+            val text = binding.etChat.text.toString()
+            if (text.isBlank()) {
                 return@setOnClickListener
             }
-            Log.d("TAG", binding.etChat.text.toString())
 
+            val now = System.currentTimeMillis() / 1000
             adapter.updateChatLogs(
                 ChatLog(
-                    createdAt = "오후 11:09",
-                    text = binding.etChat.text.toString(),
-                    type = 2
+                    roomId = 1,
+                    fromId = 2,
+                    createdAt = Time.convertTimestampToHMS(now),
+                    text = text,
+                    type = ChatAdapter.MY_CHAT_ITEM.toByte()
                 )
             )
             binding.recyclerView.scrollToPosition(adapter.itemCount - 1)
             binding.etChat.text.clear()
+
+            val contentValues = ContentValues().apply {
+                put("roomId", roomId)
+                put("fromId", 2)
+                put("text", text)
+                put("type", ChatAdapter.MY_CHAT_ITEM)
+                put("createdAt", now)
+            }
+            sqlDB.insert("chatLogs", null, contentValues)
         }
 
         binding.btnAddPhoto.setOnClickListener {

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.minerdev.exermate.R
@@ -12,10 +13,12 @@ import com.minerdev.exermate.databinding.FragmentGatheringBinding
 import com.minerdev.exermate.model.Post
 import com.minerdev.exermate.view.activity.EditPostActivity
 import com.minerdev.exermate.view.activity.PostActivity
+import com.minerdev.exermate.viewmodel.GatheringViewModel
 
 class GatheringFragment : Fragment() {
     private val adapter = PostAdapter(PostAdapter.DiffCallBack())
     private val binding by lazy { FragmentGatheringBinding.inflate(layoutInflater) }
+    private val viewModel: GatheringViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,9 +40,15 @@ class GatheringFragment : Fragment() {
                 view: View,
                 position: Int
             ) {
-                startActivity(Intent(requireContext(), PostActivity::class.java))
+                val intent = Intent(requireContext(), PostActivity::class.java).apply {
+                    putExtra("roomId", adapter.currentList[position].id)
+                }
+                startActivity(intent)
             }
         }
+
+        viewModel.postList.observe(viewLifecycleOwner, adapter::submitList)
+        viewModel.loadPosts()
 
         adapter.submitList(
             listOf(
