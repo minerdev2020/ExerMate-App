@@ -7,6 +7,9 @@ object Constants {
 
     var BASE_URL: String = ""
     const val API_AUTH = "api/auth"
+    const val API_USER = "api/user"
+    const val API_POST = "api/post"
+    const val API_CHATROOM = "api/chatroom"
 
     var USER_EMAIL: String = ""
 }
