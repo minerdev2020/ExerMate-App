@@ -12,6 +12,7 @@
         android:layout_height="200dp">
 
         <LinearLayout
+            android:id="@+id/profile_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="300dp"
@@ -43,10 +44,10 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/tv_userInfo"
+                    android:id="@+id/tv_stateMsg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="기타 정보들"
+                    android:text="상태 메시지"
                     android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>

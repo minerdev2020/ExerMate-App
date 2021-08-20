@@ -15,6 +15,7 @@ import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.FragmentSettingBinding
 import com.minerdev.exermate.network.LoadImage
 import com.minerdev.exermate.utils.Constants
+import com.minerdev.exermate.view.activity.AccountInfoActivity
 import com.minerdev.exermate.view.activity.UserInfoActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +36,7 @@ class SettingFragment : Fragment() {
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 when (position) {
                     0 -> {
-                        startActivity(Intent(requireActivity(), UserInfoActivity::class.java))
+                        startActivity(Intent(requireActivity(), AccountInfoActivity::class.java))
                     }
                     1 -> {
                         val builder = AlertDialog.Builder(requireContext()).apply {
@@ -58,10 +59,14 @@ class SettingFragment : Fragment() {
                 }
             }
 
+        binding.profileLayout.setOnClickListener {
+            startActivity(Intent(requireActivity(), UserInfoActivity::class.java))
+        }
+
         binding.tvUserEmail.text = Constants.USER_EMAIL
-        binding.tvUserInfo.text = "온라인"
 
         CoroutineScope(Dispatchers.Main).launch {
+            binding.tvStateMsg.text = "이제 취업하자..."
             val bitmap = withContext(Dispatchers.IO) {
                 LoadImage.get("https://i.imgur.com/q1jbHAu.jpeg")
             }

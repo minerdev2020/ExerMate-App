@@ -9,6 +9,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/tab_chat"
+        android:enabled="true"
+        android:icon="@drawable/ic_round_chat_24"
+        android:title="운동 채팅방"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/tab_gathering"
         android:enabled="true"
         android:icon="@drawable/ic_round_search_24"

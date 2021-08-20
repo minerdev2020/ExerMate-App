@@ -11,6 +11,7 @@ import com.minerdev.exermate.adapter.SectionPageAdapter
 import com.minerdev.exermate.databinding.ActivityMainBinding
 import com.minerdev.exermate.utils.Constants
 import com.minerdev.exermate.view.fragment.GatheringFragment
+import com.minerdev.exermate.view.fragment.MyChatRoomFragment
 import com.minerdev.exermate.view.fragment.SettingFragment
 import com.minerdev.exermate.view.fragment.TodayGoalFragment
 
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         adapter.addFragment(TodayGoalFragment(), "오늘의 목표")
+        adapter.addFragment(MyChatRoomFragment(), "운동 채팅방")
         adapter.addFragment(GatheringFragment(), "운동 모임 찾기")
         adapter.addFragment(SettingFragment(), "설정")
         binding.viewPager.adapter = adapter
@@ -64,8 +66,9 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.tab_goal -> binding.viewPager.currentItem = 0
-                R.id.tab_gathering -> binding.viewPager.currentItem = 1
-                R.id.tab_settings -> binding.viewPager.currentItem = 2
+                R.id.tab_chat -> binding.viewPager.currentItem = 1
+                R.id.tab_gathering -> binding.viewPager.currentItem = 2
+                R.id.tab_settings -> binding.viewPager.currentItem = 3
                 else -> {
                 }
             }

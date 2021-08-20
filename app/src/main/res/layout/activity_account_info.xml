@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.UserInfoActivity">
+    tools:context=".view.activity.AccountInfoActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -19,14 +19,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_profile"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/circle" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="이메일 입력"
+                android:inputType="textEmailAddress"
+                android:privateImeOptions="defaultInputmode=english" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_pw"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="비밀번호 입력"
+                android:inputType="textPassword"
+                android:privateImeOptions="defaultInputmode=english" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -34,10 +54,10 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_stateMsg"
+                android:id="@+id/et_nickname"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="상태 메시지 입력"
+                android:hint="닉네임 입력"
                 android:inputType="textPersonName"
                 android:privateImeOptions="defaultInputmode=english" />
         </com.google.android.material.textfield.TextInputLayout>

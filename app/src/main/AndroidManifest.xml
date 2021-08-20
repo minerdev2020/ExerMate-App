@@ -15,10 +15,13 @@
         android:theme="@style/Theme.Exermate"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".view.activity.UserInfoActivity"
+            android:exported="true" />
+        <activity
             android:name=".view.activity.FullScreenPhotoActivity"
             android:exported="true" />
         <activity
-            android:name=".view.activity.UserInfoActivity"
+            android:name=".view.activity.AccountInfoActivity"
             android:exported="true" />
         <activity
             android:name=".view.activity.GoalSettingActivity"

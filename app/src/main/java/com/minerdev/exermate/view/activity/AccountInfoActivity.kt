@@ -1,15 +1,20 @@
 package com.minerdev.exermate.view.activity
 
 import android.os.Bundle
+import android.text.InputFilter
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import com.minerdev.exermate.R
-import com.minerdev.exermate.databinding.ActivityUserInfoBinding
+import com.minerdev.exermate.databinding.ActivityAccountInfoBinding
+import com.minerdev.exermate.model.User
+import kotlinx.coroutines.*
 import java.util.regex.Pattern
 
-class UserInfoActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityUserInfoBinding.inflate(layoutInflater) }
+class AccountInfoActivity : AppCompatActivity() {
+    private val binding by lazy { ActivityAccountInfoBinding.inflate(layoutInflater) }
+    private val userInfo = MutableLiveData<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,6 +22,11 @@ class UserInfoActivity : AppCompatActivity() {
 
         supportActionBar?.title = "유저정보 수정"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        userInfo.observe(this) {
+            binding.etEmail.setText(it.email)
+            binding.etNickname.setText(it.nickname)
+        }
 
         binding.btnBack.setOnClickListener {
             finish()
@@ -64,5 +74,28 @@ class UserInfoActivity : AppCompatActivity() {
             else -> finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupEditTexts() {
+        binding.etEmail.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
+            val pattern = Pattern.compile("^[a-zA-Z0-9@._]*$")
+            if (charSequence == "" || pattern.matcher(charSequence).matches()) {
+                charSequence
+            } else ""
+        }, InputFilter.LengthFilter(30))
+
+        binding.etPw.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
+            val pattern = Pattern.compile("^[a-zA-Z0-9!@#$%^&*+~-]*$")
+            if (charSequence == "" || pattern.matcher(charSequence).matches()) {
+                charSequence
+            } else ""
+        }, InputFilter.LengthFilter(20))
+
+        binding.etNickname.filters = arrayOf(InputFilter { charSequence, _, _, _, _, _ ->
+            val pattern = Pattern.compile("^[a-zA-Z0-9]*$")
+            if (charSequence == "" || pattern.matcher(charSequence).matches()) {
+                charSequence
+            } else ""
+        }, InputFilter.LengthFilter(10))
     }
 }
