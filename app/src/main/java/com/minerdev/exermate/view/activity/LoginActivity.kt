@@ -27,6 +27,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        if (Constants.APPLICATION_MODE == Constants.DEV_MODE && Constants.BASE_URL.isBlank()) {
+            startActivity(Intent(this, DevNetworkSettingActivity::class.java))
+            finish()
+            return
+        }
+
         if (checkLoginStatus()) {
             val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
             val userEmail = sharedPreferences.getString("userEmail", "") ?: ""

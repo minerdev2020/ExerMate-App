@@ -66,11 +66,16 @@ class UserInfoActivity : AppCompatActivity() {
 
         userInfo.observe(this) {
             binding.etStateMsg.setText(it.email)
-            CoroutineScope(Dispatchers.Main).launch {
-                val bitmap = withContext(Dispatchers.IO) {
-                    LoadImage.get(it.profileUrl)
+            if (Constants.USER_PROFILE_URL.isNotBlank()) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val bitmap = withContext(Dispatchers.IO) {
+                        LoadImage.get(Constants.USER_PROFILE_URL)
+                    }
+                    binding.ivProfile.setImageBitmap(bitmap)
                 }
-                binding.ivProfile.setImageBitmap(bitmap)
+
+            } else {
+                binding.ivProfile.setImageResource(R.drawable.ic_round_account_circle_24)
             }
         }
 

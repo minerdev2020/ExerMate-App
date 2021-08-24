@@ -81,7 +81,7 @@ class SettingFragment : Fragment() {
 
         binding.tvUserEmail.text = Constants.USER_EMAIL
 
-        if (Constants.USER_PROFILE_URL != "") {
+        if (Constants.USER_PROFILE_URL.isNotBlank()) {
             CoroutineScope(Dispatchers.Main).launch {
                 binding.tvStateMsg.text = "이제 취업하자..."
                 val bitmap = withContext(Dispatchers.IO) {
