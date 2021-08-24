@@ -11,7 +11,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.minerdev.exermate.databinding.ActivityLoginBinding
+import com.minerdev.exermate.network.AuthService
+import com.minerdev.exermate.network.BaseCallBack
 import com.minerdev.exermate.utils.Constants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.util.regex.Pattern
 
 class LoginActivity : AppCompatActivity() {
@@ -35,8 +41,8 @@ class LoginActivity : AppCompatActivity() {
         setupEditTexts()
     }
 
-    private fun tryLogin(userId: String, userPw: String) {
-        AuthService.login(userId, userPw,
+    private fun tryLogin(userEmail: String, userPw: String) {
+        val callBack = BaseCallBack(
             { _: Int, response: String ->
                 val jsonResponse = JSONObject(response)
                 Log.d(Constants.TAG, "tryLogin response : " + jsonResponse.getString("message"))
@@ -46,25 +52,28 @@ class LoginActivity : AppCompatActivity() {
 
                 val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
-                editor.putString("id", data.getInt("id").toString())
-                editor.putString("user_id", data.getString("user_id"))
-                editor.putString("type_id", data.getString("type_id"))
+                editor.putString("userEmail", data.getString("userEmail"))
                 editor.apply()
 
-                Constants.ID = data.getInt("id").toString()
-                Constants.USER_ID = data.getString("user_id")
+                Constants.USER_EMAIL = data.getString("userEmail")
 
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                binding.etEmail.setText("")
+                binding.etPw.setText("")
+
+                startActivity(Intent(this, MainActivity::class.java))
             },
             { code: Int, response: String ->
                 val data = JSONObject(response)
                 Log.d(Constants.TAG, "tryLogin response : " + data.getString("message"))
                 when (code) {
-                    400 -> Toast.makeText(this, "이메일이나 비밀번호가 잘못되었습니다!", Toast.LENGTH_LONG).show()
-                    401 -> Toast.makeText(this, "다른 기기에서 이미 로그인 되어있습니다!", Toast.LENGTH_LONG).show()
-                    404 -> Toast.makeText(this, "계정이 존재하지 않습니다!", Toast.LENGTH_LONG).show()
+                    400 -> {
+                        binding.etPw.setText("")
+                        Toast.makeText(this, "이메일이나 비밀번호가 잘못되었습니다!", Toast.LENGTH_SHORT).show()
+                    }
+                    401 -> Toast.makeText(this, "다른 기기에서 이미 로그인 되어있습니다!", Toast.LENGTH_SHORT).show()
+                    404 -> Toast.makeText(this, "계정이 존재하지 않습니다!", Toast.LENGTH_SHORT).show()
                     else -> {
+                        Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     }
                 }
             },
@@ -72,6 +81,10 @@ class LoginActivity : AppCompatActivity() {
                 Log.d(Constants.TAG, "tryLogin error : " + error.localizedMessage)
             }
         )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            AuthService.login(userEmail, userPw, callBack)
+        }
     }
 
     private fun checkLoginStatus(): Boolean {
@@ -92,7 +105,22 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "비밀번호를 입력해주세요!", Toast.LENGTH_LONG).show()
                 }
                 else -> {
-                    tryLogin(userEmail, userPw)
+                    if (Constants.APPLICATION_MODE == Constants.DEV_MODE_WITHOUT_SERVER) {
+                        startActivity(Intent(this, MainActivity::class.java))
+
+                        val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putString("userEmail", userEmail)
+                        editor.apply()
+
+                        binding.etEmail.setText("")
+                        binding.etPw.setText("")
+
+                        Constants.USER_EMAIL = userEmail
+
+                    } else {
+                        tryLogin(userEmail, userPw)
+                    }
                 }
             }
         }

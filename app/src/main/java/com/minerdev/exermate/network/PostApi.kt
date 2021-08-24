@@ -9,18 +9,15 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface PostApi {
-    @GET("get-exer-posts")
+    @GET("get-exer-post-list")
     fun readAll(): Call<JsonObject>
 
-    @POST("make-exer-post")
+    @POST("create")
     fun create(@Body post: JsonElement): Call<JsonObject>
 
     @GET("get-exer-post")
-    fun read(@Query("id") id: Int): Call<JsonObject>
+    fun read(@Query("exerPostID") id: Int): Call<JsonObject>
 
-    @POST("modify-exer-post")
+    @POST("modify")
     fun update(@Body post: JsonElement): Call<JsonObject>
-
-    @GET("delete-exer-post")
-    fun delete(@Query("postId") postId: Int): Call<JsonObject>
 }

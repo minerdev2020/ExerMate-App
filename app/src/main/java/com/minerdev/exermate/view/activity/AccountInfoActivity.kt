@@ -9,7 +9,13 @@ import androidx.lifecycle.MutableLiveData
 import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.ActivityAccountInfoBinding
 import com.minerdev.exermate.model.User
+import com.minerdev.exermate.network.BaseCallBack
+import com.minerdev.exermate.network.UserService
+import com.minerdev.exermate.utils.Constants
 import kotlinx.coroutines.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import org.json.JSONObject
 import java.util.regex.Pattern
 
 class AccountInfoActivity : AppCompatActivity() {
@@ -31,13 +37,28 @@ class AccountInfoActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             finish()
         }
+
         binding.btnDone.setOnClickListener {
             val builder = AlertDialog.Builder(this).apply {
                 setTitle("확인")
                 setIcon(R.drawable.ic_round_help_24)
                 setMessage("작성하신 내용으로 수정하시겠습니까?")
                 setPositiveButton("네") { _, _ ->
-                    super.finish()
+//                    val callBack = BaseCallBack(
+//                        { code, response -> super.finish() },
+//                        { code, response -> super.finish() },
+//                        { error -> super.finish() }
+//                    )
+//
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        UserService.modify(
+//                            binding.etEmail.text.toString(),
+//                            binding.etPw.text.toString(),
+//                            binding.etNickname.text.toString(),
+//                            callBack
+//                        )
+//                    }
+                    finish()
                 }
                 setNegativeButton("아니요") { _, _ ->
                     return@setNegativeButton
@@ -49,6 +70,22 @@ class AccountInfoActivity : AppCompatActivity() {
         }
 
         setupEditTexts()
+
+        val callBack = BaseCallBack(
+            { code, response ->
+                val data = JSONObject(response)
+                val format = Json { encodeDefaults = true }
+                userInfo.postValue(format.decodeFromString<User>(data.getString("data")))
+            },
+            { code, response -> super.finish() },
+            { error -> super.finish() }
+        )
+
+        if (Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
+            CoroutineScope(Dispatchers.IO).launch {
+                UserService.read(callBack)
+            }
+        }
     }
 
     override fun finish() {

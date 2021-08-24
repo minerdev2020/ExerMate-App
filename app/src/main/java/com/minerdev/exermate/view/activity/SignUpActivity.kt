@@ -7,8 +7,12 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.minerdev.exermate.databinding.ActivitySignUpBinding
-import com.minerdev.exermate.network.AuthService
+import com.minerdev.exermate.network.BaseCallBack
+import com.minerdev.exermate.network.UserService
 import com.minerdev.exermate.utils.Constants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.regex.Pattern
 
@@ -34,43 +38,56 @@ class SignUpActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun tryRegister(
-        userId: String,
+    private fun trySignUp(
+        userEmail: String,
         userPw: String,
         nickname: String
     ) {
-        if (userId.isNotBlank() && userPw.isNotBlank() && nickname.isNotBlank()) {
-            AuthService.register(userId, userPw, nickname,
-                { _: Int, response: String ->
-                    val data = JSONObject(response)
-                    Log.d(Constants.TAG, "tryRegister response : " + data.getString("message"))
-                },
-                { code: Int, response: String ->
-                    val data = JSONObject(response)
-                    Log.d(Constants.TAG, "tryRegister response : " + data.getString("message"))
-                    when (code) {
-                        409 -> Toast.makeText(this, "이미 존재하는 계정입니다!", Toast.LENGTH_SHORT)
-                            .show()
-                        else -> {
-                        }
+        val callBack = BaseCallBack(
+            { _: Int, response: String ->
+                val data = JSONObject(response)
+                Log.d(Constants.TAG, "tryRegister response : " + data.getString("message"))
+                finish()
+            },
+            { code: Int, response: String ->
+                val data = JSONObject(response)
+                Log.d(Constants.TAG, "tryRegister response : " + data.getString("message"))
+                when (code) {
+                    409 -> Toast.makeText(this, "이미 존재하는 계정입니다!", Toast.LENGTH_SHORT).show()
+                    else -> {
+                        Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     }
-                },
-                { error: Throwable ->
-                    Log.d(Constants.TAG, "tryRegister error : " + error.localizedMessage)
                 }
-            )
+                finish()
+            },
+            { error: Throwable ->
+                Log.d(Constants.TAG, "tryRegister error : " + error.localizedMessage)
+                finish()
+            }
+        )
 
-        } else {
-            Toast.makeText(this, "필수 입력사항을 전부 기입해주세요!", Toast.LENGTH_SHORT).show()
+        CoroutineScope(Dispatchers.IO).launch {
+            UserService.signUp(userEmail, userPw, nickname, callBack)
         }
     }
 
     private fun setupButtons() {
         binding.btnSignUp.setOnClickListener {
-            val userId = binding.etEmail.text.toString()
+            val userEmail = binding.etEmail.text.toString()
             val userPw = binding.etPw.text.toString()
             val nickname = binding.etNickname.text.toString()
-            tryRegister(userId, userPw, nickname)
+
+            if (userEmail.isNotBlank() && userPw.isNotBlank() && nickname.isNotBlank()) {
+                if (Constants.APPLICATION_MODE == Constants.DEV_MODE_WITHOUT_SERVER) {
+                    finish()
+
+                } else {
+                    trySignUp(userEmail, userPw, nickname)
+                }
+
+            } else {
+                Toast.makeText(this, "필수 입력사항을 전부 기입해주세요!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.btnBack.setOnClickListener {

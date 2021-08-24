@@ -41,7 +41,7 @@ class GatheringFragment : Fragment() {
                 position: Int
             ) {
                 val intent = Intent(requireContext(), PostActivity::class.java).apply {
-                    putExtra("roomId", adapter.currentList[position].id)
+                    putExtra("postId", adapter.currentList[position].id)
                 }
                 startActivity(intent)
             }

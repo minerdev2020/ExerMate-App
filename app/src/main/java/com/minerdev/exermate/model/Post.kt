@@ -10,15 +10,18 @@ data class Post(
     var createdAt: String = "",
     var updatedAt: String = "",
     var title: String = "",
+    var place: String = "",
+    var exerciseTime: String = "",
+    var maxMemberNum: Int = 0,
     var text: String = "",
     var state: Int = 0
 ) {
     fun toJson() = buildJsonObject {
-        put("id", id)
-        put("createdAt", createdAt)
-        put("updatedAt", updatedAt)
-        put("title", title)
-        put("text", text)
-        put("state", state)
+        put("exerPostID", id)
+        put("exerName", title)
+        put("exerPlace", place)
+        put("exerTime", exerciseTime)
+        put("maxNum", maxMemberNum)
+        put("contents", text)
     }
 }

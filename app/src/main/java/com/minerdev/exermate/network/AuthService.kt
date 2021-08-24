@@ -8,29 +8,16 @@ object AuthService {
     private val client = RetrofitClient.getClient(Constants.API_AUTH)?.create(AuthApi::class.java)
 
     fun login(id: String, pw: String, callBack: BaseCallBack) {
-        val user = buildJsonObject {
-            put("user_id", id)
-            put("user_pw", pw)
+        val body = buildJsonObject {
+            put("useremail", id)
+            put("password", pw)
         }
-        val call = client?.login(user) ?: return
+        val call = client?.login(body) ?: return
         call.enqueue(callBack)
     }
 
-    fun logout(id: String, callBack: BaseCallBack) {
-        val user = buildJsonObject {
-            put("user_id", id)
-        }
-        val call = client?.logout(user) ?: return
-        call.enqueue(callBack)
-    }
-
-    fun signUp(id: String, pw: String, nickname: String, callBack: BaseCallBack) {
-        val user = buildJsonObject {
-            put("user_id", id)
-            put("user_pw", pw)
-            put("nickname", nickname)
-        }
-        val call = client?.signUp(user) ?: return
+    fun logout(callBack: BaseCallBack) {
+        val call = client?.logout() ?: return
         call.enqueue(callBack)
     }
 }

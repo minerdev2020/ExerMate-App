@@ -11,8 +11,5 @@ interface AuthApi {
     fun login(@Body user: JsonElement): Call<JsonObject>
 
     @POST("logout")
-    fun logout(@Body user: JsonElement): Call<JsonObject>
-
-    @POST("signup")
-    fun signUp(@Body user: JsonElement): Call<JsonObject>
+    fun logout(): Call<JsonObject>
 }

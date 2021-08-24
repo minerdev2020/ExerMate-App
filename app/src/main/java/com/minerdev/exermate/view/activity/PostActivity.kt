@@ -4,20 +4,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import com.minerdev.exermate.databinding.ActivityPostBinding
+import com.minerdev.exermate.model.Post
+import com.minerdev.exermate.network.BaseCallBack
+import com.minerdev.exermate.network.PostService
+import com.minerdev.exermate.utils.Constants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import org.json.JSONObject
 
 class PostActivity : AppCompatActivity() {
     private val binding by lazy { ActivityPostBinding.inflate(layoutInflater) }
+    private val postInfo = MutableLiveData<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        if (intent == null) {
-            finish()
-        }
-
-        supportActionBar?.title = intent.getStringExtra("title") ?: "제목입니다"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.btnJoin.setOnClickListener {
@@ -25,6 +32,29 @@ class PostActivity : AppCompatActivity() {
                 putExtra("roomId", intent.getIntExtra("roomId", 0))
             }
             startActivity(intent)
+        }
+
+        postInfo.observe(this) {
+            supportActionBar?.title = it.title
+            binding.tvMemberCount.text = it.maxMemberNum.toString()
+            binding.tvPlace.text = it.place
+            binding.tvExerciseTime.text = it.exerciseTime
+            binding.tvText.text = it.text
+        }
+
+        val postId = intent.getIntExtra("postId", 0)
+        val callBack = BaseCallBack(
+            { code, response ->
+                val data = JSONObject(response)
+                val format = Json { encodeDefaults = true }
+                postInfo.postValue(format.decodeFromString<Post>(data.getString("data")))
+            }
+        )
+
+        if (postId != 0 && Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
+            CoroutineScope(Dispatchers.IO).launch {
+                PostService.read(postId, callBack)
+            }
         }
     }
 

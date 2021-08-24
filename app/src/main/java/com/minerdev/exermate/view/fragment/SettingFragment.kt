@@ -9,10 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.FragmentSettingBinding
+import com.minerdev.exermate.network.AuthService
+import com.minerdev.exermate.network.BaseCallBack
 import com.minerdev.exermate.network.LoadImage
 import com.minerdev.exermate.utils.Constants
 import com.minerdev.exermate.view.activity.AccountInfoActivity
@@ -21,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class SettingFragment : Fragment() {
     private val binding by lazy { FragmentSettingBinding.inflate(layoutInflater) }
@@ -44,7 +48,19 @@ class SettingFragment : Fragment() {
                             setIcon(R.drawable.ic_round_warning_24)
                             setMessage("정말 로그아웃 하시겠습니까?")
                             setPositiveButton("네") { _, _ ->
-                                tryLogout()
+                                if (Constants.APPLICATION_MODE == Constants.DEV_MODE_WITHOUT_SERVER) {
+                                    val sharedPreferences = requireContext().getSharedPreferences(
+                                        "login",
+                                        Context.MODE_PRIVATE
+                                    )
+                                    val editor = sharedPreferences.edit()
+                                    editor.clear()
+                                    editor.apply()
+                                    requireActivity().finish()
+
+                                } else {
+                                    tryLogout()
+                                }
                             }
                             setNegativeButton("아니요") { _, _ ->
                                 return@setNegativeButton
@@ -65,12 +81,17 @@ class SettingFragment : Fragment() {
 
         binding.tvUserEmail.text = Constants.USER_EMAIL
 
-        CoroutineScope(Dispatchers.Main).launch {
-            binding.tvStateMsg.text = "이제 취업하자..."
-            val bitmap = withContext(Dispatchers.IO) {
-                LoadImage.get("https://i.imgur.com/q1jbHAu.jpeg")
+        if (Constants.USER_PROFILE_URL != "") {
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.tvStateMsg.text = "이제 취업하자..."
+                val bitmap = withContext(Dispatchers.IO) {
+                    LoadImage.get(Constants.USER_PROFILE_URL)
+                }
+                binding.ivProfile.setImageBitmap(bitmap)
             }
-            binding.ivProfile.setImageBitmap(bitmap)
+
+        } else {
+            binding.ivProfile.setImageResource(R.drawable.ic_round_account_circle_24)
         }
 
         setHasOptionsMenu(false)
@@ -83,14 +104,15 @@ class SettingFragment : Fragment() {
         val userEmail = sharedPreferences.getString("userEmail", "") ?: ""
         Log.d(Constants.TAG, "logout : $userEmail")
 
-        if (userId.isNotEmpty()) {
-            AuthService.logout(userId,
+        if (userEmail.isNotEmpty()) {
+            val callBack = BaseCallBack(
                 { _: Int, response: String ->
                     val data = JSONObject(response)
                     Log.d(Constants.TAG, "logout response : " + data.getString("message"))
                     val editor = sharedPreferences.edit()
                     editor.clear()
                     editor.apply()
+                    requireActivity().finish()
                 },
                 { code: Int, response: String ->
                     val data = JSONObject(response)
@@ -111,16 +133,25 @@ class SettingFragment : Fragment() {
                             editor.apply()
                         }
                         else -> {
+                            Toast.makeText(requireContext(), response, Toast.LENGTH_LONG).show()
+                            val editor = sharedPreferences.edit()
+                            editor.clear()
+                            editor.apply()
                         }
                     }
+
+                    requireActivity().finish()
 
                 },
                 { error: Throwable ->
                     Log.d(Constants.TAG, "logout error : " + error.localizedMessage)
+                    requireActivity().finish()
                 }
             )
-        }
 
-        requireActivity().finish()
+            CoroutineScope(Dispatchers.IO).launch {
+                AuthService.logout(callBack)
+            }
+        }
     }
 }
