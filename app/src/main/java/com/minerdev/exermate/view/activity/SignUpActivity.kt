@@ -2,13 +2,12 @@ package com.minerdev.exermate.view.activity
 
 import android.os.Bundle
 import android.text.InputFilter
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.minerdev.exermate.databinding.ActivitySignUpBinding
 import com.minerdev.exermate.network.BaseCallBack
-import com.minerdev.exermate.network.UserService
+import com.minerdev.exermate.network.service.UserService
 import com.minerdev.exermate.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,24 +44,23 @@ class SignUpActivity : AppCompatActivity() {
     ) {
         val callBack = BaseCallBack(
             { _: Int, response: String ->
-                val data = JSONObject(response)
-                Log.d(Constants.TAG, "tryRegister response : " + data.getString("message"))
-                finish()
+                val jsonResponse = JSONObject(response)
+                val result = jsonResponse.getBoolean("success")
+                if (result) {
+                    Toast.makeText(this, "가입 성공!", Toast.LENGTH_SHORT).show()
+                    finish()
+
+                } else {
+                    Toast.makeText(this, "이미 존재하는 계정입니다!", Toast.LENGTH_SHORT).show()
+                }
             },
             { code: Int, response: String ->
-                val data = JSONObject(response)
-                Log.d(Constants.TAG, "tryRegister response : " + data.getString("message"))
                 when (code) {
                     409 -> Toast.makeText(this, "이미 존재하는 계정입니다!", Toast.LENGTH_SHORT).show()
                     else -> {
                         Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     }
                 }
-                finish()
-            },
-            { error: Throwable ->
-                Log.d(Constants.TAG, "tryRegister error : " + error.localizedMessage)
-                finish()
             }
         )
 

@@ -24,6 +24,8 @@ class GatheringFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true)
+
         val manager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.addItemDecoration(
@@ -49,73 +51,6 @@ class GatheringFragment : Fragment() {
 
         viewModel.postList.observe(viewLifecycleOwner, adapter::submitList)
         viewModel.loadPosts()
-
-        adapter.submitList(
-            listOf(
-                Post(
-                    id = 1,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 2,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 3,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 4,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 5,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 6,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 7,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 8,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 9,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 10,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 11,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                ),
-                Post(
-                    id = 12,
-                    createdAt = "21.06.30",
-                    title = "한국 여자 배구 팀의 도쿄 올림픽 경기를 보고 전세계가 극찬을 아끼지 않은 이유"
-                )
-            )
-        )
-
-        setHasOptionsMenu(true)
 
         return binding.root
     }

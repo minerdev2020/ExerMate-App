@@ -1,5 +1,8 @@
-package com.minerdev.exermate.network
+package com.minerdev.exermate.network.service
 
+import com.minerdev.exermate.network.BaseCallBack
+import com.minerdev.exermate.network.RetrofitClient
+import com.minerdev.exermate.network.api.UserApi
 import com.minerdev.exermate.utils.Constants
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put

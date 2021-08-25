@@ -25,7 +25,6 @@ import com.minerdev.exermate.model.ChatRoom
 import com.minerdev.exermate.model.User
 import com.minerdev.exermate.utils.Constants
 import com.minerdev.exermate.utils.DBHelper
-import com.minerdev.exermate.utils.Time
 import java.io.File
 
 class ChatActivity : AppCompatActivity() {
@@ -130,7 +129,7 @@ class ChatActivity : AppCompatActivity() {
                 ChatLog(
                     roomId = roomId,
                     fromId = cursor.getInt(cursor.getColumnIndex("fromId")),
-                    createdAt = Time.convertTimestampToHMS(cursor.getLong(cursor.getColumnIndex("createdAt"))),
+                    createdAt = cursor.getLong(cursor.getColumnIndex("createdAt")),
                     text = cursor.getString(cursor.getColumnIndex("text")),
                     type = cursor.getInt(cursor.getColumnIndex("type")).toByte()
                 )
@@ -150,7 +149,7 @@ class ChatActivity : AppCompatActivity() {
                 ChatLog(
                     roomId = 1,
                     fromId = 2,
-                    createdAt = Time.convertTimestampToHMS(now),
+                    createdAt = now,
                     text = text,
                     type = ChatAdapter.MY_CHAT_ITEM.toByte()
                 )

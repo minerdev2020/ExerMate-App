@@ -27,7 +27,17 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.FragmentTodayGoalBinding
+import com.minerdev.exermate.model.User
+import com.minerdev.exermate.network.BaseCallBack
+import com.minerdev.exermate.network.service.UserService
+import com.minerdev.exermate.utils.Constants
 import com.minerdev.exermate.view.activity.GoalSettingActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import org.json.JSONObject
 import java.lang.Float.max
 import java.util.*
 import kotlin.collections.ArrayList
@@ -62,12 +72,14 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
     private var startSteps = 0
 
     private var isFirst = true
-    private var alertDialog : AlertDialog? = null
+    private var alertDialog: AlertDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true)
+
         val builder = AlertDialog.Builder(requireContext()).apply {
             setTitle("앱 권한")
             setMessage("해당 앱의 원활한 기능을 이용하시려면 애플리케이션 정보>권한에서 '신체 활동' 권한을 허용해 주십시오.")
@@ -99,7 +111,27 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
         val intentFilter = IntentFilter(Intent.ACTION_DATE_CHANGED)
         requireActivity().registerReceiver(receiver, intentFilter)
 
-        setHasOptionsMenu(true)
+        if (Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
+            val callBack = BaseCallBack(
+                { _: Int, response: String ->
+                    val jsonResponse = JSONObject(response)
+                    val result = jsonResponse.getBoolean("success")
+                    if (result) {
+                        val format = Json {
+                            encodeDefaults = true
+                            ignoreUnknownKeys = true
+                        }
+                        val userInfo = format.decodeFromString<User>(response)
+                        Constants.USER_PROFILE_URL = userInfo.profileUrl
+                        Constants.USER_STATUS_MSG = userInfo.statusMsg
+                    }
+                }
+            )
+
+            CoroutineScope(Dispatchers.IO).launch {
+                UserService.read(callBack)
+            }
+        }
 
         return binding.root
     }

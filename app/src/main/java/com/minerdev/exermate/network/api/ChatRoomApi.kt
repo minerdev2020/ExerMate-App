@@ -1,4 +1,4 @@
-package com.minerdev.exermate.network
+package com.minerdev.exermate.network.api
 
 import kotlinx.serialization.json.JsonObject
 import retrofit2.Call

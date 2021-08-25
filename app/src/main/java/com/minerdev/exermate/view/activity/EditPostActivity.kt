@@ -10,7 +10,7 @@ import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.ActivityEditPostBinding
 import com.minerdev.exermate.model.Post
 import com.minerdev.exermate.network.BaseCallBack
-import com.minerdev.exermate.network.PostService
+import com.minerdev.exermate.network.service.PostService
 import com.minerdev.exermate.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,12 +51,16 @@ class EditPostActivity : AppCompatActivity() {
             val postId = intent.getIntExtra("postId", 0)
             val callBack = BaseCallBack(
                 { code, response ->
-                    val data = JSONObject(response)
-                    val format = Json { encodeDefaults = true }
-                    postInfo.postValue(format.decodeFromString<Post>(data.getString("data")))
-                },
-                { code, response -> super.finish() },
-                { error -> super.finish() }
+                    val jsonResponse = JSONObject(response)
+                    val result = jsonResponse.getBoolean("success")
+                    if (result) {
+                        val format = Json {
+                            encodeDefaults = true
+                            ignoreUnknownKeys = true
+                        }
+                        postInfo.postValue(format.decodeFromString<Post>(response))
+                    }
+                }
             )
 
             if (postId != 0 && Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
@@ -73,24 +77,7 @@ class EditPostActivity : AppCompatActivity() {
             setIcon(R.drawable.ic_round_warning_24)
             setMessage("작성하신 내용이 저장되지않습니다.\n정말 뒤로가시겠습니까?")
             setPositiveButton("네") { _, _ ->
-                val callBack = BaseCallBack(
-                    { code, response -> super.finish() },
-                    { code, response -> super.finish() },
-                    { error -> super.finish() }
-                )
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    val post = Post(
-                        title = binding.etTitle.text.toString(),
-                        text = binding.etText.text.toString()
-                    )
-
-                    when (mode) {
-                        CREATE_MODE -> PostService.create(post, callBack)
-                        MODIFY_MODE -> PostService.update(post, callBack)
-                        else -> super.finish()
-                    }
-                }
+                super.finish()
             }
             setNegativeButton("아니요") { _, _ ->
                 return@setNegativeButton
@@ -110,7 +97,23 @@ class EditPostActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.toolbar_send_post -> {
-                super.finish()
+                val callBack = BaseCallBack()
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val post = Post(
+                        title = binding.etTitle.text.toString(),
+                        place = binding.etPlace.text.toString(),
+                        exerciseTime = binding.etExerciseTime.text.toString(),
+                        maxMemberNum = binding.etText.text.toString().toInt(),
+                        text = binding.etText.text.toString(),
+                    )
+
+                    when (mode) {
+                        CREATE_MODE -> PostService.create(post, callBack)
+                        MODIFY_MODE -> PostService.update(post, callBack)
+                        else -> super.finish()
+                    }
+                }
             }
             else -> finish()
         }

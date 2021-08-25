@@ -9,6 +9,7 @@ import com.minerdev.exermate.model.ChatLog
 import com.minerdev.exermate.model.ChatRoom
 import com.minerdev.exermate.model.User
 import com.minerdev.exermate.network.LoadImage
+import com.minerdev.exermate.utils.Time
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -155,14 +156,14 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     class ItemChatViewHolder(private val binding: ItemChatBinding) : ViewHolder(binding.root) {
         override fun bind(chatLog: ChatLog) {
-            binding.tvCreatedAt.text = chatLog.createdAt
+            binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatLog.createdAt)
             binding.tvChat.text = chatLog.text
         }
     }
 
     class ItemMyChatViewHolder(private val binding: ItemMyChatBinding) : ViewHolder(binding.root) {
         override fun bind(chatLog: ChatLog) {
-            binding.tvCreatedAt.text = chatLog.createdAt
+            binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatLog.createdAt)
             binding.tvChat.text = chatLog.text
         }
     }
@@ -173,7 +174,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
     ) :
         ViewHolder(binding.root) {
         override fun bind(chatLog: ChatLog) {
-            binding.tvCreatedAt.text = chatLog.createdAt
+            binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatLog.createdAt)
 
             CoroutineScope(Dispatchers.Main).launch {
                 val bitmap = withContext(Dispatchers.IO) {
@@ -194,7 +195,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
     ) :
         ViewHolder(binding.root) {
         override fun bind(chatLog: ChatLog) {
-            binding.tvCreatedAt.text = chatLog.createdAt
+            binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatLog.createdAt)
 
             CoroutineScope(Dispatchers.Main).launch {
                 val bitmap = withContext(Dispatchers.IO) {
@@ -216,7 +217,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         ViewHolder(binding.root) {
         override fun bind(chatLog: ChatLog, nickname: String, profileUrl: String) {
             binding.tvNickname.text = nickname
-            binding.tvCreatedAt.text = chatLog.createdAt
+            binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatLog.createdAt)
             binding.tvChat.text = chatLog.text
 
             CoroutineScope(Dispatchers.Main).launch {
@@ -239,7 +240,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         ViewHolder(binding.root) {
         override fun bind(chatLog: ChatLog, nickname: String, profileUrl: String) {
             binding.tvNickname.text = nickname
-            binding.tvCreatedAt.text = chatLog.createdAt
+            binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatLog.createdAt)
 
             CoroutineScope(Dispatchers.Main).launch {
                 val profileBitmap = withContext(Dispatchers.IO) {

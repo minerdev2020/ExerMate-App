@@ -21,7 +21,7 @@ import com.minerdev.exermate.databinding.ActivityUserInfoBinding
 import com.minerdev.exermate.model.User
 import com.minerdev.exermate.network.BaseCallBack
 import com.minerdev.exermate.network.LoadImage
-import com.minerdev.exermate.network.UserService
+import com.minerdev.exermate.network.service.UserService
 import com.minerdev.exermate.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,12 +50,12 @@ class UserInfoActivity : AppCompatActivity() {
 
                 } else {
                     binding.ivProfile.setImageURI(selectedImageUri)
-                    profilepPath = path
+                    profilePath = path
                 }
             }
         }
 
-    private var profilepPath = ""
+    private var profilePath = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,11 +105,7 @@ class UserInfoActivity : AppCompatActivity() {
                 setIcon(R.drawable.ic_round_help_24)
                 setMessage("작성하신 내용으로 수정하시겠습니까?")
                 setPositiveButton("네") { _, _ ->
-                    val callBack = BaseCallBack(
-                        { code, response -> super.finish() },
-                        { code, response -> super.finish() },
-                        { error -> super.finish() }
-                    )
+                    val callBack = BaseCallBack()
 
                     CoroutineScope(Dispatchers.IO).launch {
                         UserService.updateStateMsg(
@@ -117,7 +113,7 @@ class UserInfoActivity : AppCompatActivity() {
                             callBack
                         )
 
-                        UserService.updateProfile(profilepPath, callBack)
+                        UserService.updateProfile(profilePath, callBack)
                     }
                 }
                 setNegativeButton("아니요") { _, _ ->
@@ -131,12 +127,16 @@ class UserInfoActivity : AppCompatActivity() {
 
         val callBack = BaseCallBack(
             { code, response ->
-                val data = JSONObject(response)
-                val format = Json { encodeDefaults = true }
-                userInfo.postValue(format.decodeFromString<User>(data.getString("data")))
-            },
-            { code, response -> super.finish() },
-            { error -> super.finish() }
+                val jsonResponse = JSONObject(response)
+                val result = jsonResponse.getBoolean("success")
+                if (result) {
+                    val format = Json {
+                        encodeDefaults = true
+                        ignoreUnknownKeys = true
+                    }
+                    userInfo.postValue(format.decodeFromString<User>(response))
+                }
+            }
         )
 
         if (Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {

@@ -11,7 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.minerdev.exermate.databinding.ActivityLoginBinding
-import com.minerdev.exermate.network.AuthService
+import com.minerdev.exermate.network.service.AuthService
 import com.minerdev.exermate.network.BaseCallBack
 import com.minerdev.exermate.utils.Constants
 import kotlinx.coroutines.CoroutineScope
@@ -48,29 +48,31 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun tryLogin(userEmail: String, userPw: String) {
+        Log.d(Constants.TAG, "try login : $userEmail")
+
         val callBack = BaseCallBack(
             { _: Int, response: String ->
                 val jsonResponse = JSONObject(response)
-                Log.d(Constants.TAG, "tryLogin response : " + jsonResponse.getString("message"))
+                val result = jsonResponse.getBoolean("success")
+                if (result) {
+                    val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("userEmail", userEmail)
+                    editor.apply()
 
-                val data = JSONObject(jsonResponse.getString("data"))
-                Log.d(Constants.TAG, "tryLogin response : " + jsonResponse.getString("data"))
+                    Constants.USER_EMAIL = userEmail
 
-                val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putString("userEmail", data.getString("userEmail"))
-                editor.apply()
+                    binding.etEmail.setText("")
+                    binding.etPw.setText("")
 
-                Constants.USER_EMAIL = data.getString("userEmail")
+                    startActivity(Intent(this, MainActivity::class.java))
 
-                binding.etEmail.setText("")
-                binding.etPw.setText("")
-
-                startActivity(Intent(this, MainActivity::class.java))
+                } else {
+                    binding.etPw.setText("")
+                    Toast.makeText(this, "이메일이나 비밀번호가 잘못되었습니다!", Toast.LENGTH_SHORT).show()
+                }
             },
             { code: Int, response: String ->
-                val data = JSONObject(response)
-                Log.d(Constants.TAG, "tryLogin response : " + data.getString("message"))
                 when (code) {
                     400 -> {
                         binding.etPw.setText("")
@@ -82,9 +84,6 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this, response, Toast.LENGTH_LONG).show()
                     }
                 }
-            },
-            { error: Throwable ->
-                Log.d(Constants.TAG, "tryLogin error : " + error.localizedMessage)
             }
         )
 

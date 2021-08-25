@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.minerdev.exermate.databinding.ActivityPostBinding
 import com.minerdev.exermate.model.Post
 import com.minerdev.exermate.network.BaseCallBack
-import com.minerdev.exermate.network.PostService
+import com.minerdev.exermate.network.service.PostService
 import com.minerdev.exermate.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,9 +45,15 @@ class PostActivity : AppCompatActivity() {
         val postId = intent.getIntExtra("postId", 0)
         val callBack = BaseCallBack(
             { code, response ->
-                val data = JSONObject(response)
-                val format = Json { encodeDefaults = true }
-                postInfo.postValue(format.decodeFromString<Post>(data.getString("data")))
+                val jsonResponse = JSONObject(response)
+                val result = jsonResponse.getBoolean("success")
+                if (result) {
+                    val format = Json {
+                        encodeDefaults = true
+                        ignoreUnknownKeys = true
+                    }
+                    postInfo.postValue(format.decodeFromString<Post>(response))
+                }
             }
         )
 

@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.FragmentSettingBinding
-import com.minerdev.exermate.network.AuthService
+import com.minerdev.exermate.network.service.AuthService
 import com.minerdev.exermate.network.BaseCallBack
 import com.minerdev.exermate.network.LoadImage
 import com.minerdev.exermate.utils.Constants
@@ -34,6 +34,8 @@ class SettingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(false)
+
         binding.listView.adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, listMenu)
         binding.listView.onItemClickListener =
@@ -94,29 +96,30 @@ class SettingFragment : Fragment() {
             binding.ivProfile.setImageResource(R.drawable.ic_round_account_circle_24)
         }
 
-        setHasOptionsMenu(false)
-
         return binding.root
     }
 
     private fun tryLogout() {
         val sharedPreferences = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE)
         val userEmail = sharedPreferences.getString("userEmail", "") ?: ""
-        Log.d(Constants.TAG, "logout : $userEmail")
+        Log.d(Constants.TAG, "try logout : $userEmail")
 
         if (userEmail.isNotEmpty()) {
             val callBack = BaseCallBack(
                 { _: Int, response: String ->
-                    val data = JSONObject(response)
-                    Log.d(Constants.TAG, "logout response : " + data.getString("message"))
-                    val editor = sharedPreferences.edit()
-                    editor.clear()
-                    editor.apply()
-                    requireActivity().finish()
+                    val jsonResponse = JSONObject(response)
+                    val result = jsonResponse.getBoolean("success")
+                    if (result) {
+                        val editor = sharedPreferences.edit()
+                        editor.clear()
+                        editor.apply()
+                        requireActivity().finish()
+
+                    } else {
+                        Toast.makeText(requireContext(), "로그아웃에 실패했습니다!", Toast.LENGTH_SHORT).show()
+                    }
                 },
                 { code: Int, response: String ->
-                    val data = JSONObject(response)
-                    Log.d(Constants.TAG, "logout response : " + data.getString("message"))
                     when (code) {
                         401 -> {
                             Toast.makeText(requireContext(), "이미 로그아웃된 계정입니다!", Toast.LENGTH_SHORT)
@@ -139,13 +142,6 @@ class SettingFragment : Fragment() {
                             editor.apply()
                         }
                     }
-
-                    requireActivity().finish()
-
-                },
-                { error: Throwable ->
-                    Log.d(Constants.TAG, "logout error : " + error.localizedMessage)
-                    requireActivity().finish()
                 }
             )
 

@@ -4,14 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.minerdev.exermate.model.Post
 import com.minerdev.exermate.network.BaseCallBack
-import com.minerdev.exermate.network.PostService
+import com.minerdev.exermate.network.service.PostService
 import com.minerdev.exermate.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
 
 class GatheringViewModel : ViewModel() {
     val postList = MutableLiveData<List<Post>>()
@@ -19,9 +18,11 @@ class GatheringViewModel : ViewModel() {
     fun loadPosts() {
         val callBack = BaseCallBack(
             { code, response ->
-                val data = JSONObject(response)
-                val format = Json { encodeDefaults = true }
-                postList.postValue(format.decodeFromString<List<Post>>(data.getString("data")))
+                val format = Json {
+                    encodeDefaults = true
+                    ignoreUnknownKeys = true
+                }
+                postList.postValue(format.decodeFromString<List<Post>>(response))
             }
         )
 

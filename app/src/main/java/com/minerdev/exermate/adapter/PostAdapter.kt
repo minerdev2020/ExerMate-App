@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.minerdev.exermate.databinding.ItemPostBinding
 import com.minerdev.exermate.model.Post
+import com.minerdev.exermate.utils.Time
 
 class PostAdapter(diffCallBack: DiffCallBack) :
     ListAdapter<Post, PostAdapter.ViewHolder>(diffCallBack) {
@@ -44,7 +45,7 @@ class PostAdapter(diffCallBack: DiffCallBack) :
         }
 
         fun bind(post: Post) {
-            binding.tvCreatedAt.text = post.createdAt
+            binding.tvCreatedAt.text = Time.convertTimestampToString(post.createdAt)
             binding.tvTitle.text = post.title
         }
     }

@@ -10,7 +10,7 @@ import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.ActivityAccountInfoBinding
 import com.minerdev.exermate.model.User
 import com.minerdev.exermate.network.BaseCallBack
-import com.minerdev.exermate.network.UserService
+import com.minerdev.exermate.network.service.UserService
 import com.minerdev.exermate.utils.Constants
 import kotlinx.coroutines.*
 import kotlinx.serialization.decodeFromString
@@ -73,12 +73,17 @@ class AccountInfoActivity : AppCompatActivity() {
 
         val callBack = BaseCallBack(
             { code, response ->
-                val data = JSONObject(response)
-                val format = Json { encodeDefaults = true }
-                userInfo.postValue(format.decodeFromString<User>(data.getString("data")))
+                val jsonResponse = JSONObject(response)
+                val result = jsonResponse.getBoolean("success")
+                if (result) {
+                    val format = Json {
+                        encodeDefaults = true
+                        ignoreUnknownKeys = true
+                    }
+                    userInfo.postValue(format.decodeFromString<User>(response))
+                }
             },
             { code, response -> super.finish() },
-            { error -> super.finish() }
         )
 
         if (Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {

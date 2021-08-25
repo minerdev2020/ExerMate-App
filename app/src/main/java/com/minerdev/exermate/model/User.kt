@@ -1,5 +1,6 @@
 package com.minerdev.exermate.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -7,14 +8,16 @@ import kotlinx.serialization.json.put
 @Serializable
 data class User(
     var id: Int = 0,
-    var createdAt: String = "",
+    var createdAt: Long = 0,
     var email: String = "",
-    var nickname: String = "",
-    var profileUrl: String = ""
+    @SerialName("nickName") var nickname: String = "",
+    @SerialName("profileRoute") var profileUrl: String = "",
+    var statusMsg: String = ""
 ) {
     fun toJson() = buildJsonObject {
-        put("id", id)
-        put("email", email)
-        put("nickname", nickname)
+        put("useremail", email)
+        put("nickName", nickname)
+        put("profileRoute", profileUrl)
+        put("statusMsg", statusMsg)
     }
 }

@@ -24,6 +24,8 @@ class MyChatRoomFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(false)
+
         val manager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.addItemDecoration(
@@ -49,21 +51,6 @@ class MyChatRoomFragment : Fragment() {
 
         viewModel.chatRoomList.observe(viewLifecycleOwner, adapter::submitList)
         viewModel.loadChatRooms()
-
-        adapter.submitList(
-            listOf(
-                ChatRoom(
-                    id = 1,
-                    createdAt = "21.06.30",
-                    users = listOf()
-                ),
-                ChatRoom(
-                    id = 2,
-                    createdAt = "21.06.30",
-                    users = listOf()
-                ),
-            )
-        )
 
         return binding.root
     }

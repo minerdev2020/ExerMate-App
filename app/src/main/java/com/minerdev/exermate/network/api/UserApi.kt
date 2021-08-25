@@ -1,4 +1,4 @@
-package com.minerdev.exermate.network
+package com.minerdev.exermate.network.api
 
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -13,6 +13,7 @@ interface UserApi {
     @GET("data")
     fun read(): Call<JsonObject>
 
+    @Multipart
     @POST("set-proflie")
     fun updateProfile(@Part imageFile: MultipartBody.Part): Call<JsonObject>
 
