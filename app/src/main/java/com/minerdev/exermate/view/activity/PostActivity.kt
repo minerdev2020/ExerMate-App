@@ -65,9 +65,21 @@ class PostActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_my_post, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
+            R.id.toolbar_modify_post -> {
+                val intent = Intent(this, EditPostActivity::class.java).apply {
+                    putExtra("mode", EditPostActivity.MODIFY_MODE)
+                    putExtra("postId", postInfo.value?.id ?: "")
+                }
+                startActivity(intent)
+            }
             else -> finish()
         }
 

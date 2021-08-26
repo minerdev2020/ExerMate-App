@@ -1,6 +1,8 @@
 package com.minerdev.exermate.view.activity
 
+import android.content.ContentValues
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
@@ -11,17 +13,25 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.minerdev.exermate.databinding.ActivityLoginBinding
-import com.minerdev.exermate.network.service.AuthService
+import com.minerdev.exermate.model.WalkRecord
 import com.minerdev.exermate.network.BaseCallBack
+import com.minerdev.exermate.network.service.AuthService
+import com.minerdev.exermate.network.service.UserService
 import com.minerdev.exermate.utils.Constants
+import com.minerdev.exermate.utils.DBHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import java.util.regex.Pattern
 
 class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
+
+    private lateinit var dbHelper: DBHelper
+    private lateinit var sqlDB: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +51,33 @@ class LoginActivity : AppCompatActivity() {
 
             Log.d(Constants.TAG, "login : $userEmail")
             startActivity(Intent(this, MainActivity::class.java))
+
+        } else {
+            if (Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
+                dbHelper = DBHelper(this)
+                sqlDB = dbHelper.writableDatabase
+
+                val callBack = BaseCallBack(
+                    { code, response ->
+                        val jsonObject = JSONObject(response)
+                        val result = jsonObject.getString("result")
+                        val format = Json { ignoreUnknownKeys = true }
+                        val walkRecords = format.decodeFromString<List<WalkRecord>>(result)
+
+                        for (walkRecord in walkRecords) {
+                            val contentValues = ContentValues().apply {
+                                put("createdAt", walkRecord.createdAt)
+                                put("stepCount", walkRecord.stepCount)
+                            }
+
+                            sqlDB.insert("walkRecords", null, contentValues)
+                        }
+                    }
+                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    UserService.readAllWalkRecords(callBack)
+                }
+            }
         }
 
         setupButtons()

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
+import android.database.sqlite.SQLiteDatabase
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -27,16 +28,14 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.FragmentTodayGoalBinding
-import com.minerdev.exermate.model.User
 import com.minerdev.exermate.network.BaseCallBack
 import com.minerdev.exermate.network.service.UserService
 import com.minerdev.exermate.utils.Constants
+import com.minerdev.exermate.utils.DBHelper
 import com.minerdev.exermate.view.activity.GoalSettingActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import java.lang.Float.max
 import java.util.*
@@ -65,6 +64,9 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
     private val binding by lazy { FragmentTodayGoalBinding.inflate(layoutInflater) }
     private val sensorManager by lazy { requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager }
     private val stepCountSensor by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) }
+
+    private lateinit var dbHelper: DBHelper
+    private lateinit var sqlDB: SQLiteDatabase
 
     private var dayOfWeek = -1
     private var goalSteps = 10000
@@ -105,33 +107,23 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
 
         binding.tvGoalSteps.text = goalSteps.toString()
 
-        val dataList = MutableList(7) { 0 }
-        initBarChart(dataList)
+
+        dbHelper = DBHelper(requireContext())
+        sqlDB = dbHelper.writableDatabase
+
+        val walkRecords = MutableList(7) { 0 }
+        val cursor =
+            sqlDB.rawQuery("select stepCount from walkRecords limit $dayOfWeek;", null)
+        var i = dayOfWeek - 1
+        while (cursor.moveToNext()) {
+            walkRecords[i] = cursor.getInt(cursor.getColumnIndex("stepCount"))
+            i--
+        }
+        cursor.close()
+        initBarChart(walkRecords)
 
         val intentFilter = IntentFilter(Intent.ACTION_DATE_CHANGED)
         requireActivity().registerReceiver(receiver, intentFilter)
-
-        if (Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
-            val callBack = BaseCallBack(
-                { _: Int, response: String ->
-                    val jsonResponse = JSONObject(response)
-                    val result = jsonResponse.getBoolean("success")
-                    if (result) {
-                        val format = Json {
-                            encodeDefaults = true
-                            ignoreUnknownKeys = true
-                        }
-                        val userInfo = format.decodeFromString<User>(response)
-                        Constants.USER_PROFILE_URL = userInfo.profileUrl
-                        Constants.USER_STATUS_MSG = userInfo.statusMsg
-                    }
-                }
-            )
-
-            CoroutineScope(Dispatchers.IO).launch {
-                UserService.read(callBack)
-            }
-        }
 
         return binding.root
     }
@@ -335,6 +327,32 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
     }
 
     private fun dateChanged() {
+        val now = System.currentTimeMillis()
+        val contentValues = ContentValues().apply {
+            put("userId", 0)
+            put("createdAt", now)
+            put("stepCount", currentSteps)
+        }
+        sqlDB.insert("walkRecords", null, contentValues)
+
+        if (Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
+            val callBack = BaseCallBack(
+                { code, response ->
+                    val jsonResponse = JSONObject(response)
+                    val result = jsonResponse.getBoolean("success")
+                    if (result) {
+                        Toast.makeText(requireContext(), "걸음수 저장 성공!", Toast.LENGTH_SHORT).show()
+
+                    } else {
+                        Toast.makeText(requireContext(), "걸음수 저장 실패!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            )
+            CoroutineScope(Dispatchers.IO).launch {
+                UserService.addWalkRecord(currentSteps, now, callBack)
+            }
+        }
+
         val calendar = Calendar.getInstance()
         dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
         startSteps = -1
