@@ -10,7 +10,7 @@ interface UserApi {
     @POST("signup")
     fun signUp(@Body user: JsonElement): Call<JsonObject>
 
-    @GET("data")
+    @GET("get-data")
     fun read(): Call<JsonObject>
 
     @Multipart
@@ -20,13 +20,13 @@ interface UserApi {
     @POST("set-status-msg")
     fun updateStateMsg(@Body user: JsonElement): Call<JsonObject>
 
-    @GET("walk-records")
+    @GET("get-walk-records")
     fun readAllWalkRecords(): Call<JsonObject>
 
-    @POST("add-walk-records")
+    @POST("add-walk-record")
     fun addWalkRecord(@Body walkRecord: JsonElement): Call<JsonObject>
 
-    @GET("chat-room")
+    @GET("get-chat-room")
     fun readAllJoinedChatRooms(): Call<JsonObject>
 
     @GET("join-chat-room")
