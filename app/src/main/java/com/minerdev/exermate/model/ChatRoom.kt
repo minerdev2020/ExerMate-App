@@ -8,9 +8,11 @@ import kotlinx.serialization.json.put
 data class ChatRoom(
     var id: Int = 0,
     var createdAt: Long = 0,
+    var title: String = "",
     var users: List<User> = listOf()
 ) {
     fun toJson() = buildJsonObject {
         put("id", id)
+        put("title", title)
     }
 }

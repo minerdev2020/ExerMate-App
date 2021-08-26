@@ -63,10 +63,6 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        if (intent == null) {
-            finish()
-        }
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "단체 채팅방"
 
@@ -87,6 +83,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
         val roomId = intent.getIntExtra("roomId", 0)
+        val title = intent.getStringExtra("title") ?: ""
 
         val chatUsersFromDB = ArrayList<User>()
         var cursor = sqlDB.rawQuery("select * from chatUsers where roomId = $roomId;", null)
@@ -102,23 +99,8 @@ class ChatActivity : AppCompatActivity() {
         cursor.close()
         adapter.initChatRoom(
             ChatRoom(
-                users = listOf(
-                    User(
-                        id = 1,
-                        nickname = "홍길동",
-                        profileUrl = "https://i.imgur.com/fCvxGeS.jpeg"
-                    ),
-                    User(
-                        id = 2,
-                        nickname = "아이언맨",
-                        profileUrl = "https://i.imgur.com/q1jbHAu.jpeg"
-                    ),
-                    User(
-                        id = 3,
-                        nickname = "임꺽정",
-                        profileUrl = "https://i.imgur.com/Lc5VA8b.png"
-                    )
-                )
+                title = title,
+                users = chatUsersFromDB
             )
         )
 

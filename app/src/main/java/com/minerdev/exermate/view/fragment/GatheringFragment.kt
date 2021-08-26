@@ -44,6 +44,7 @@ class GatheringFragment : Fragment() {
             ) {
                 val intent = Intent(requireContext(), PostActivity::class.java).apply {
                     putExtra("postId", adapter.currentList[position].id)
+                    putExtra("title", adapter.currentList[position].chatRoomName)
                 }
                 startActivity(intent)
             }

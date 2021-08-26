@@ -30,6 +30,7 @@ class PostActivity : AppCompatActivity() {
         binding.btnJoin.setOnClickListener {
             val intent = Intent(this, ChatActivity::class.java).apply {
                 putExtra("roomId", intent.getIntExtra("roomId", 0))
+                putExtra("title", intent.getStringExtra("title") ?: "")
             }
             startActivity(intent)
         }
