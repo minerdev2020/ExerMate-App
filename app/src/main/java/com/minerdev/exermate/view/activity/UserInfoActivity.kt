@@ -65,11 +65,11 @@ class UserInfoActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         userInfo.observe(this) {
-            binding.etStateMsg.setText(it.email)
-            if (Constants.USER_PROFILE_URL.isNotBlank()) {
+            binding.etStatusMsg.setText(it.email)
+            if (it.profileUrl.isNotBlank()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     val bitmap = withContext(Dispatchers.IO) {
-                        LoadImage.get(Constants.USER_PROFILE_URL)
+                        LoadImage.get(it.profileUrl)
                     }
                     binding.ivProfile.setImageBitmap(bitmap)
                 }
@@ -105,11 +105,11 @@ class UserInfoActivity : AppCompatActivity() {
                 setIcon(R.drawable.ic_round_help_24)
                 setMessage("작성하신 내용으로 수정하시겠습니까?")
                 setPositiveButton("네") { _, _ ->
-                    val callBack = BaseCallBack()
+                    val callBack = BaseCallBack({ code, response -> super.finish() })
 
                     CoroutineScope(Dispatchers.IO).launch {
-                        UserService.updateStateMsg(
-                            binding.etStateMsg.text.toString(),
+                        UserService.updateStatusMsg(
+                            binding.etStatusMsg.text.toString(),
                             callBack
                         )
 
@@ -130,10 +130,7 @@ class UserInfoActivity : AppCompatActivity() {
                 val jsonResponse = JSONObject(response)
                 val result = jsonResponse.getBoolean("success")
                 if (result) {
-                    val format = Json {
-                        encodeDefaults = true
-                        ignoreUnknownKeys = true
-                    }
+                    val format = Json { ignoreUnknownKeys = true }
                     userInfo.postValue(format.decodeFromString<User>(response))
                 }
             }

@@ -26,7 +26,7 @@ interface Api {
     fun updateProfile(@Part imageFile: MultipartBody.Part): Call<JsonObject>
 
     @POST("${Constants.API_USER}set-status-msg")
-    fun updateStateMsg(@Body user: JsonElement): Call<JsonObject>
+    fun updateStatusMsg(@Body user: JsonElement): Call<JsonObject>
 
     @GET("${Constants.API_USER}get-walk-records")
     fun readAllWalkRecords(): Call<JsonObject>
@@ -38,14 +38,14 @@ interface Api {
     fun readAllJoinedChatRooms(): Call<JsonObject>
 
     @GET("${Constants.API_USER}join-chat-room")
-    fun joinChatRoom(@Query("chatRoomID") roomId: Int): Call<JsonObject>
+    fun joinChatRoom(@Query("chatRoomID") roomId: String): Call<JsonObject>
 
     @GET("${Constants.API_USER}exit-chat-room")
-    fun leaveChatRoom(@Query("chatRoomID") roomId: Int): Call<JsonObject>
+    fun leaveChatRoom(@Query("chatRoomID") roomId: String): Call<JsonObject>
 
 
     @GET("${Constants.API_CHATROOM}get-user-list")
-    fun readAllMembers(@Query("chatRoomId") id: Int): Call<JsonObject>
+    fun readAllMembers(@Query("chatRoomID") roomId: String): Call<JsonObject>
 
 
     @GET("${Constants.API_POST}get-exer-post-list")
@@ -55,7 +55,7 @@ interface Api {
     fun create(@Body post: JsonElement): Call<JsonObject>
 
     @GET("${Constants.API_POST}get-exer-post")
-    fun read(@Query("exerPostID") id: Int): Call<JsonObject>
+    fun read(@Query("exerPostID") postId: String): Call<JsonObject>
 
     @POST("${Constants.API_POST}modify")
     fun update(@Body post: JsonElement): Call<JsonObject>

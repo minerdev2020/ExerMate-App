@@ -35,11 +35,11 @@ object UserService {
         call.enqueue(callBack)
     }
 
-    fun updateStateMsg(stateMsg: String, callBack: BaseCallBack) {
+    fun updateStatusMsg(statusMsg: String, callBack: BaseCallBack) {
         val body = buildJsonObject {
-            put("stateMsg", stateMsg)
+            put("statusMsg", statusMsg)
         }
-        val call = client?.updateStateMsg(body) ?: return
+        val call = client?.updateStatusMsg(body) ?: return
         call.enqueue(callBack)
     }
 
@@ -62,12 +62,12 @@ object UserService {
         call.enqueue(callBack)
     }
 
-    fun joinChatRoom(roomId: Int, callBack: BaseCallBack) {
+    fun joinChatRoom(roomId: String, callBack: BaseCallBack) {
         val call = client?.joinChatRoom(roomId) ?: return
         call.enqueue(callBack)
     }
 
-    fun leaveChatRoom(roomId: Int, callBack: BaseCallBack) {
+    fun leaveChatRoom(roomId: String, callBack: BaseCallBack) {
         val call = client?.leaveChatRoom(roomId) ?: return
         call.enqueue(callBack)
     }

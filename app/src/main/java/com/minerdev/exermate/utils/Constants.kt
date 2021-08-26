@@ -17,6 +17,4 @@ object Constants {
     const val API_CHATROOM = "/chatroom/"
 
     var USER_EMAIL: String = ""
-    var USER_PROFILE_URL: String = ""
-    var USER_STATUS_MSG: String = ""
 }

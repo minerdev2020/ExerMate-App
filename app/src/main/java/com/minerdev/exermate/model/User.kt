@@ -7,9 +7,9 @@ import kotlinx.serialization.json.put
 
 @Serializable
 data class User(
-    var id: Int = 0,
+    var id: String = "",
     var createdAt: Long = 0,
-    var email: String = "",
+    @SerialName("useremail") var email: String = "",
     @SerialName("nickName") var nickname: String = "",
     @SerialName("profileRoute") var profileUrl: String = "",
     var statusMsg: String = ""

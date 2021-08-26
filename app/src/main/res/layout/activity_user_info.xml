@@ -35,7 +35,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_stateMsg"
+                android:id="@+id/et_statusMsg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="상태 메시지 입력"

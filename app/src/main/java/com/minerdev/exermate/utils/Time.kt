@@ -68,10 +68,10 @@ object Time {
     }
 
     fun convertTimestampToString(timestamp: Long): String {
-        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(timestamp * 1000)
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(timestamp)
     }
 
     fun convertTimestampToHMS(timestamp: Long): String {
-        return SimpleDateFormat("a h:mm", Locale.getDefault()).format(timestamp * 1000)
+        return SimpleDateFormat("a h:mm", Locale.getDefault()).format(timestamp)
     }
 }

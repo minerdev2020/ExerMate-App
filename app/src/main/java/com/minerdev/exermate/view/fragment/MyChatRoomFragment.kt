@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.minerdev.exermate.adapter.ChatRoomAdapter
 import com.minerdev.exermate.databinding.FragmentMyCharRoomBinding
-import com.minerdev.exermate.model.ChatRoom
 import com.minerdev.exermate.view.activity.ChatActivity
 import com.minerdev.exermate.viewmodel.MyChatRoomViewModel
 
@@ -43,7 +42,8 @@ class MyChatRoomFragment : Fragment() {
                 position: Int
             ) {
                 val intent = Intent(requireContext(), ChatActivity::class.java).apply {
-                    putExtra("chatRoomId", adapter.currentList[position].id)
+                    putExtra("roomId", adapter.currentList[position].id)
+                    putExtra("name", adapter.currentList[position].name)
                 }
                 startActivity(intent)
             }
@@ -53,5 +53,10 @@ class MyChatRoomFragment : Fragment() {
         viewModel.loadChatRooms()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadChatRooms()
     }
 }

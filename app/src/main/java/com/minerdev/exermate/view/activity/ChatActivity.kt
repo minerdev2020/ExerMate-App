@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.minerdev.exermate.adapter.ChatAdapter
 import com.minerdev.exermate.databinding.ActivityChatBinding
 import com.minerdev.exermate.model.ChatLog
-import com.minerdev.exermate.model.ChatRoom
 import com.minerdev.exermate.model.User
 import com.minerdev.exermate.utils.Constants
 import com.minerdev.exermate.utils.DBHelper
@@ -64,7 +63,7 @@ class ChatActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "단체 채팅방"
+        supportActionBar?.title = intent.getStringExtra("name") ?: ""
 
         dbHelper = DBHelper(this)
         sqlDB = dbHelper.writableDatabase
@@ -82,43 +81,38 @@ class ChatActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val roomId = intent.getIntExtra("roomId", 0)
-        val title = intent.getStringExtra("title") ?: ""
-
-        val chatUsersFromDB = ArrayList<User>()
-        var cursor = sqlDB.rawQuery("select * from chatUsers where roomId = $roomId;", null)
-        while (cursor.moveToNext()) {
-            chatUsersFromDB.add(
-                User(
-                    id = cursor.getInt(cursor.getColumnIndex("userId")),
-                    nickname = cursor.getString(cursor.getColumnIndex("nickname")),
-                    profileUrl = cursor.getString(cursor.getColumnIndex("profileUrl"))
+        val roomId = intent.getStringExtra("roomId") ?: ""
+        if (roomId.isNotBlank()) {
+            val chatMembersFromDB = ArrayList<User>()
+            var cursor = sqlDB.rawQuery("select * from chatUsers where roomId = \"$roomId\";", null)
+            while (cursor.moveToNext()) {
+                chatMembersFromDB.add(
+                    User(
+                        id = cursor.getString(cursor.getColumnIndex("userId")),
+                        nickname = cursor.getString(cursor.getColumnIndex("nickname")),
+                        profileUrl = cursor.getString(cursor.getColumnIndex("profileUrl"))
+                    )
                 )
-            )
-        }
-        cursor.close()
-        adapter.initChatRoom(
-            ChatRoom(
-                title = title,
-                users = chatUsersFromDB
-            )
-        )
+            }
+            cursor.close()
+            adapter.initChatRoom(chatMembersFromDB)
 
-        val chatLogsFromDB = ArrayList<ChatLog>()
-        cursor = sqlDB.rawQuery("select * from chatLogs where roomId = $roomId;", null)
-        while (cursor.moveToNext()) {
-            chatLogsFromDB.add(
-                ChatLog(
-                    roomId = roomId,
-                    fromId = cursor.getInt(cursor.getColumnIndex("fromId")),
-                    createdAt = cursor.getLong(cursor.getColumnIndex("createdAt")),
-                    text = cursor.getString(cursor.getColumnIndex("text")),
-                    type = cursor.getInt(cursor.getColumnIndex("type")).toByte()
+            val chatLogsFromDB = ArrayList<ChatLog>()
+            cursor = sqlDB.rawQuery("select * from chatLogs where roomId = \"$roomId\";", null)
+            while (cursor.moveToNext()) {
+                chatLogsFromDB.add(
+                    ChatLog(
+                        roomId = roomId,
+                        fromId = cursor.getString(cursor.getColumnIndex("fromId")),
+                        createdAt = cursor.getLong(cursor.getColumnIndex("createdAt")),
+                        text = cursor.getString(cursor.getColumnIndex("text")),
+                        type = cursor.getInt(cursor.getColumnIndex("type")).toByte()
+                    )
                 )
-            )
+            }
+            cursor.close()
+            adapter.initChatLogs(chatLogsFromDB)
         }
-        cursor.close()
-        adapter.initChatLogs(chatLogsFromDB)
 
         binding.btnSend.setOnClickListener {
             val text = binding.etChat.text.toString()
@@ -126,11 +120,11 @@ class ChatActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val now = System.currentTimeMillis() / 1000
+            val now = System.currentTimeMillis()
             adapter.updateChatLogs(
                 ChatLog(
-                    roomId = 1,
-                    fromId = 2,
+                    roomId = roomId,
+                    fromId = Constants.USER_EMAIL,
                     createdAt = now,
                     text = text,
                     type = ChatAdapter.MY_CHAT_ITEM.toByte()

@@ -17,7 +17,7 @@ object PostService {
         call.enqueue(callBack)
     }
 
-    fun read(id: Int, callBack: BaseCallBack) {
+    fun read(id: String, callBack: BaseCallBack) {
         val call = client?.read(id) ?: return
         call.enqueue(callBack)
     }

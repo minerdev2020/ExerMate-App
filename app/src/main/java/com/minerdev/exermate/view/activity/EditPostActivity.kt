@@ -48,22 +48,19 @@ class EditPostActivity : AppCompatActivity() {
         mode = intent.getIntExtra("mode", CREATE_MODE)
 
         if (mode == MODIFY_MODE) {
-            val postId = intent.getIntExtra("postId", 0)
+            val postId = intent.getStringExtra("postId") ?: ""
             val callBack = BaseCallBack(
                 { code, response ->
                     val jsonResponse = JSONObject(response)
                     val result = jsonResponse.getBoolean("success")
                     if (result) {
-                        val format = Json {
-                            encodeDefaults = true
-                            ignoreUnknownKeys = true
-                        }
+                        val format = Json { ignoreUnknownKeys = true }
                         postInfo.postValue(format.decodeFromString<Post>(response))
                     }
                 }
             )
 
-            if (postId != 0 && Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
+            if (postId.isNotBlank() && Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
                 CoroutineScope(Dispatchers.IO).launch {
                     PostService.read(postId, callBack)
                 }
@@ -106,6 +103,7 @@ class EditPostActivity : AppCompatActivity() {
                         exerciseTime = binding.etExerciseTime.text.toString(),
                         maxMemberNum = binding.etText.text.toString().toInt(),
                         text = binding.etText.text.toString(),
+                        chatRoomName = "단체 채팅방"
                     )
 
                     when (mode) {

@@ -76,10 +76,7 @@ class AccountInfoActivity : AppCompatActivity() {
                 val jsonResponse = JSONObject(response)
                 val result = jsonResponse.getBoolean("success")
                 if (result) {
-                    val format = Json {
-                        encodeDefaults = true
-                        ignoreUnknownKeys = true
-                    }
+                    val format = Json { ignoreUnknownKeys = true }
                     userInfo.postValue(format.decodeFromString<User>(response))
                 }
             },

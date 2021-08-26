@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import org.json.JSONObject
 
 class GatheringViewModel : ViewModel() {
     val postList = MutableLiveData<List<Post>>()
@@ -18,11 +19,10 @@ class GatheringViewModel : ViewModel() {
     fun loadPosts() {
         val callBack = BaseCallBack(
             { code, response ->
-                val format = Json {
-                    encodeDefaults = true
-                    ignoreUnknownKeys = true
-                }
-                postList.postValue(format.decodeFromString<List<Post>>(response))
+                val jsonObject = JSONObject(response)
+                val result = jsonObject.getString("result")
+                val format = Json { ignoreUnknownKeys = true }
+                postList.postValue(format.decodeFromString<List<Post>>(result))
             }
         )
 

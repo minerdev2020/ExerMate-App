@@ -2,13 +2,16 @@ package com.minerdev.exermate.view.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
+import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.ActivityPostBinding
 import com.minerdev.exermate.model.Post
 import com.minerdev.exermate.network.BaseCallBack
 import com.minerdev.exermate.network.service.PostService
+import com.minerdev.exermate.network.service.UserService
 import com.minerdev.exermate.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,22 +46,19 @@ class PostActivity : AppCompatActivity() {
             binding.tvText.text = it.text
         }
 
-        val postId = intent.getIntExtra("postId", 0)
+        val postId = intent.getStringExtra("postId") ?: ""
         val callBack = BaseCallBack(
             { code, response ->
                 val jsonResponse = JSONObject(response)
                 val result = jsonResponse.getBoolean("success")
                 if (result) {
-                    val format = Json {
-                        encodeDefaults = true
-                        ignoreUnknownKeys = true
-                    }
+                    val format = Json { ignoreUnknownKeys = true }
                     postInfo.postValue(format.decodeFromString<Post>(response))
                 }
             }
         )
 
-        if (postId != 0 && Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
+        if (postId.isNotBlank() && Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
             CoroutineScope(Dispatchers.IO).launch {
                 PostService.read(postId, callBack)
             }

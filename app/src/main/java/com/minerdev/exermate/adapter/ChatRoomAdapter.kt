@@ -46,7 +46,7 @@ class ChatRoomAdapter(diffCallBack: DiffCallBack) :
 
         fun bind(chatRoom: ChatRoom) {
             binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatRoom.createdAt)
-            binding.tvTitle.text = "단채 체팅방 ${chatRoom.id}"
+            binding.tvName.text = chatRoom.name
         }
     }
 

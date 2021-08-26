@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.minerdev.exermate.databinding.*
 import com.minerdev.exermate.model.ChatLog
-import com.minerdev.exermate.model.ChatRoom
 import com.minerdev.exermate.model.User
 import com.minerdev.exermate.network.LoadImage
 import com.minerdev.exermate.utils.Time
@@ -28,12 +27,12 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     lateinit var clickListener: (urlStr: String) -> Unit
 
-    private val userInfo = HashMap<Int, User>()
+    private val memberInfo = HashMap<String, User>()
     private val chatLogs = ArrayList<ChatLog>()
 
-    fun initChatRoom(chatRoom: ChatRoom) {
-        for (user in chatRoom.users) {
-            userInfo[user.id] = user
+    fun initChatRoom(members: ArrayList<User>) {
+        for (member in members) {
+            memberInfo[member.id] = member
         }
     }
 
@@ -129,8 +128,8 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         val chatLog = chatLogs[position]
 
         if (holder is ItemChatStartViewHolder || holder is ItemChatStartPhotoViewHolder) {
-            val nickname = userInfo[chatLog.fromId]?.nickname ?: ""
-            val profileUrl = userInfo[chatLog.fromId]?.profileUrl ?: ""
+            val nickname = memberInfo[chatLog.fromId]?.nickname ?: ""
+            val profileUrl = memberInfo[chatLog.fromId]?.profileUrl ?: ""
             holder.bind(chatLog, nickname, profileUrl)
 
         } else {

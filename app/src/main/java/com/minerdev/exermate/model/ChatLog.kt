@@ -4,8 +4,8 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 data class ChatLog(
-    var roomId: Int = 0,
-    var fromId: Int = 0,
+    var roomId: String = "",
+    var fromId: String = "",
     var createdAt: Long = 0,
     var text: String = "",
     var type: Byte = 0

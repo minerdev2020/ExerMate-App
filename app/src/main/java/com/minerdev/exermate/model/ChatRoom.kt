@@ -1,18 +1,19 @@
 package com.minerdev.exermate.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 @Serializable
 data class ChatRoom(
-    var id: Int = 0,
+    @SerialName("chatRoomID") var id: String = "",
     var createdAt: Long = 0,
-    var title: String = "",
+    @SerialName("chatRoomName") var name: String = "",
     var users: List<User> = listOf()
 ) {
     fun toJson() = buildJsonObject {
-        put("id", id)
-        put("title", title)
+        put("chatRoomID", id)
+        put("chatRoomName", name)
     }
 }

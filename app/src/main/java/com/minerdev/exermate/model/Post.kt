@@ -7,7 +7,7 @@ import kotlinx.serialization.json.put
 
 @Serializable
 data class Post(
-    @SerialName("exerPostID") var id: Int = 0,
+    @SerialName("exerPostID") var id: String = "",
     @SerialName("hostemail") var email: String = "",
     @SerialName("uploadTime") var createdAt: Long = 0,
     var updatedAt: Long = 0,

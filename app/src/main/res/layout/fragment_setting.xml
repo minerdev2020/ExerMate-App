@@ -44,7 +44,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/tv_stateMsg"
+                    android:id="@+id/tv_statusMsg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="상태 메시지"
