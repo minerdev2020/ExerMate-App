@@ -2,8 +2,6 @@ package com.minerdev.exermate.network.service
 
 import com.minerdev.exermate.network.BaseCallBack
 import com.minerdev.exermate.network.RetrofitClient
-import com.minerdev.exermate.network.api.UserApi
-import com.minerdev.exermate.utils.Constants
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -12,7 +10,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 object UserService {
-    private val client = RetrofitClient.getClient(Constants.API_USER)?.create(UserApi::class.java)
+    private val client = RetrofitClient.getClient()
 
     fun signUp(id: String, pw: String, nickname: String, callBack: BaseCallBack) {
         val body = buildJsonObject {

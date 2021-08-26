@@ -2,13 +2,11 @@ package com.minerdev.exermate.network.service
 
 import com.minerdev.exermate.network.BaseCallBack
 import com.minerdev.exermate.network.RetrofitClient
-import com.minerdev.exermate.network.api.AuthApi
-import com.minerdev.exermate.utils.Constants
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 object AuthService {
-    private val client = RetrofitClient.getClient(Constants.API_AUTH)?.create(AuthApi::class.java)
+    private val client = RetrofitClient.getClient()
 
     fun login(id: String, pw: String, callBack: BaseCallBack) {
         val body = buildJsonObject {
