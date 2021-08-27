@@ -143,6 +143,7 @@ class SettingFragment : Fragment() {
                     if (result) {
                         sqlDB = dbHelper.writableDatabase
                         sqlDB.execSQL("delete from walkRecords;")
+                        sqlDB.execSQL("delete from joinedChatRooms;")
                         sqlDB.execSQL("delete from chatUsers;")
                         sqlDB.execSQL("delete from chatLogs;")
 

@@ -84,7 +84,7 @@ class ChatActivity : AppCompatActivity() {
         val roomId = intent.getStringExtra("roomId") ?: ""
         if (roomId.isNotBlank()) {
             val chatMembersFromDB = ArrayList<User>()
-            var cursor = sqlDB.rawQuery("select * from chatUsers where roomId = \"$roomId\";", null)
+            var cursor = sqlDB.rawQuery("select * from chatMembers where roomId = \"$roomId\";", null)
             while (cursor.moveToNext()) {
                 chatMembersFromDB.add(
                     User(
