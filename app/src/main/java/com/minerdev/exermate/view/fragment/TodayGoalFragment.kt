@@ -49,7 +49,7 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
                 val intent = result.data
                 if (intent != null) {
                     goalSteps = intent.getIntExtra("goalSteps", 10000)
-                    refreshGoalSteps()
+                    refreshUI()
                 }
             }
         }
@@ -72,6 +72,8 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
     private var goalSteps = 10000
     private var currentSteps = 1000
     private var startSteps = 0
+
+    private val walkRecords = MutableList(7) { 0 }
 
     private var isFirst = true
     private var alertDialog: AlertDialog? = null
@@ -107,17 +109,22 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
 
         binding.tvGoalSteps.text = goalSteps.toString()
 
+        val calendar = Calendar.getInstance()
+        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
 
         dbHelper = DBHelper(requireContext())
         sqlDB = dbHelper.writableDatabase
 
-        val walkRecords = MutableList(7) { 0 }
-        val cursor =
-            sqlDB.rawQuery("select stepCount from walkRecords limit $dayOfWeek;", null)
+        val cursor = sqlDB.rawQuery("select stepCount from walkRecords limit $dayOfWeek;", null)
+
         var i = dayOfWeek - 1
         while (cursor.moveToNext()) {
             walkRecords[i] = cursor.getInt(cursor.getColumnIndex("stepCount"))
             i--
+
+            if (i < 0) {
+                break
+            }
         }
         cursor.close()
         initBarChart(walkRecords)
@@ -137,11 +144,15 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
         val calendar = Calendar.getInstance()
         val currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
 
-        if (prevDayOfWeek != currentDayOfWeek) {
-            dateChanged()
-
-        } else {
-            dayOfWeek = currentDayOfWeek
+        when {
+            prevDayOfWeek == -1 -> {
+                dayOfWeek = currentDayOfWeek
+                val editor = sharedPreferences.edit()
+                editor.putInt("dayOfWeek", dayOfWeek)
+                editor.apply()
+            }
+            prevDayOfWeek != currentDayOfWeek -> dateChanged()
+            else -> dayOfWeek = currentDayOfWeek
         }
 
         if (stepCountSensor == null) {
@@ -253,11 +264,8 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
             }
 
             currentSteps = event.values[0].toInt() - startSteps
-            binding.tvCurrentSteps.text = "$currentSteps"
-            binding.tvProgress.text = "${currentSteps * 100 / goalSteps}%"
-            binding.tvGoalSteps.text = "/$goalSteps 걸음"
-            binding.progressBar.progress = currentSteps * 100 / goalSteps
 
+            refreshUI()
             refreshBarChart()
 
             Log.d("TAG", "move $currentSteps")
@@ -266,7 +274,8 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
-    private fun refreshGoalSteps() {
+    private fun refreshUI() {
+        binding.tvCurrentSteps.text = "$currentSteps"
         binding.tvProgress.text = "${currentSteps * 100 / goalSteps}%"
         binding.tvGoalSteps.text = "/$goalSteps 걸음"
         binding.progressBar.progress = currentSteps * 100 / goalSteps
@@ -311,11 +320,10 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
     }
 
     private fun refreshBarChart() {
-        val dataList = MutableList(7) { 0 }
-        dataList[dayOfWeek] = currentSteps
+        walkRecords[dayOfWeek] = currentSteps
         val entryList = ArrayList<BarEntry>()
-        for ((i, data) in dataList.withIndex()) {
-            entryList.add(BarEntry(i.toFloat(), data.toFloat()))
+        for ((i, walkRecord) in walkRecords.withIndex()) {
+            entryList.add(BarEntry(i.toFloat(), walkRecord.toFloat()))
         }
 
         val barDataSet = BarDataSet(entryList, "StepDataSet")
@@ -348,6 +356,7 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
                     }
                 }
             )
+
             CoroutineScope(Dispatchers.IO).launch {
                 UserService.addWalkRecord(currentSteps, now, callBack)
             }
@@ -358,17 +367,16 @@ class TodayGoalFragment : Fragment(), SensorEventListener {
         startSteps = -1
         currentSteps = 0
 
-        binding.tvCurrentSteps.text = "$currentSteps"
-        binding.tvProgress.text = "${currentSteps * 100 / goalSteps}%"
-        binding.tvGoalSteps.text = "/$goalSteps 걸음"
-        binding.progressBar.progress = currentSteps * 100 / goalSteps
+        refreshUI()
 
         if (dayOfWeek == 0) {
-            val dataList = MutableList(7) { 0 }
-            dataList[dayOfWeek] = currentSteps
+            for (i in 0 until 7) {
+                walkRecords[i] = 0
+            }
+            walkRecords[dayOfWeek] = currentSteps
             val entryList = ArrayList<BarEntry>()
-            for ((i, data) in dataList.withIndex()) {
-                entryList.add(BarEntry(i.toFloat(), data.toFloat()))
+            for ((i, walkRecord) in walkRecords.withIndex()) {
+                entryList.add(BarEntry(i.toFloat(), walkRecord.toFloat()))
             }
 
             val barDataSet = BarDataSet(entryList, "StepDataSet")

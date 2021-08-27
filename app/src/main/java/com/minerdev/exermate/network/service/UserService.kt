@@ -30,7 +30,7 @@ object UserService {
     fun updateProfile(path: String, callBack: BaseCallBack) {
         val file = File(path)
         val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val body = MultipartBody.Part.createFormData("profile", file.name, requestFile)
+        val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         val call = client?.updateProfile(body) ?: return
         call.enqueue(callBack)
     }

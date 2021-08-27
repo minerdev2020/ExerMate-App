@@ -22,7 +22,7 @@ interface Api {
     fun read(): Call<JsonObject>
 
     @Multipart
-    @POST("${Constants.API_USER}set-proflie")
+    @POST("${Constants.API_USER}set-profile")
     fun updateProfile(@Part imageFile: MultipartBody.Part): Call<JsonObject>
 
     @POST("${Constants.API_USER}set-status-msg")

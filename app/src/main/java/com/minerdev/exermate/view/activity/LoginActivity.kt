@@ -37,6 +37,9 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        dbHelper = DBHelper(this)
+        sqlDB = dbHelper.writableDatabase
+
         if (Constants.APPLICATION_MODE == Constants.DEV_MODE && Constants.BASE_URL.isBlank()) {
             startActivity(Intent(this, DevNetworkSettingActivity::class.java))
             finish()
@@ -52,34 +55,6 @@ class LoginActivity : AppCompatActivity() {
             Log.d(Constants.TAG, "login : $userEmail")
             startActivity(Intent(this, MainActivity::class.java))
 
-        } else {
-            if (Constants.APPLICATION_MODE != Constants.DEV_MODE_WITHOUT_SERVER) {
-                dbHelper = DBHelper(this)
-                sqlDB = dbHelper.writableDatabase
-
-                val callBack = BaseCallBack(
-                    { code, response ->
-                        val jsonObject = JSONObject(response)
-                        val result = jsonObject.getString("result")
-                        val format = Json { ignoreUnknownKeys = true }
-                        val walkRecords = format.decodeFromString<List<WalkRecord>>(result)
-
-                        for (walkRecord in walkRecords) {
-                            val contentValues = ContentValues().apply {
-                                put("createdAt", walkRecord.createdAt)
-                                put("stepCount", walkRecord.stepCount)
-                            }
-
-                            sqlDB.insert("walkRecords", null, contentValues)
-                        }
-                    }
-                )
-                CoroutineScope(Dispatchers.IO).launch {
-                    UserService.readAllWalkRecords(callBack)
-                }
-            }
-        }
-
         setupButtons()
         setupEditTexts()
     }
@@ -87,7 +62,27 @@ class LoginActivity : AppCompatActivity() {
     private fun tryLogin(userEmail: String, userPw: String) {
         Log.d(Constants.TAG, "try login : $userEmail")
 
-        val callBack = BaseCallBack(
+        val readCallBack = BaseCallBack(
+            { code, response ->
+                val jsonObject = JSONObject(response)
+                val result = jsonObject.getString("result")
+                val format = Json { ignoreUnknownKeys = true }
+                val walkRecords = format.decodeFromString<List<WalkRecord>>(result)
+
+                for (walkRecord in walkRecords) {
+                    val contentValues = ContentValues().apply {
+                        put("createdAt", walkRecord.createdAt)
+                        put("stepCount", walkRecord.stepCount)
+                    }
+
+                    sqlDB.insert("walkRecords", null, contentValues)
+                }
+
+                startActivity(Intent(this, MainActivity::class.java))
+            }
+        )
+
+        val loginCallBack = BaseCallBack(
             { _: Int, response: String ->
                 val jsonResponse = JSONObject(response)
                 val result = jsonResponse.getBoolean("success")
@@ -102,7 +97,9 @@ class LoginActivity : AppCompatActivity() {
                     binding.etEmail.setText("")
                     binding.etPw.setText("")
 
-                    startActivity(Intent(this, MainActivity::class.java))
+                    CoroutineScope(Dispatchers.IO).launch {
+                        UserService.readAllWalkRecords(readCallBack)
+                    }
 
                 } else {
                     binding.etPw.setText("")
@@ -125,7 +122,7 @@ class LoginActivity : AppCompatActivity() {
         )
 
         CoroutineScope(Dispatchers.IO).launch {
-            AuthService.login(userEmail, userPw, callBack)
+            AuthService.login(userEmail, userPw, loginCallBack)
         }
     }
 
