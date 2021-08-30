@@ -59,7 +59,7 @@ class GoalSettingActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
-            else -> finish()
+            else -> super.finish()
         }
 
         return super.onOptionsItemSelected(item)

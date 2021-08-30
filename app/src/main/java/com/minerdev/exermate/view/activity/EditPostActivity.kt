@@ -101,7 +101,7 @@ class EditPostActivity : AppCompatActivity() {
                         title = binding.etTitle.text.toString(),
                         place = binding.etPlace.text.toString(),
                         exerciseTime = binding.etExerciseTime.text.toString(),
-                        maxMemberNum = binding.etText.text.toString().toInt(),
+                        maxMemberNum = binding.etMaxMemberCount.text.toString().toInt(),
                         text = binding.etText.text.toString(),
                         chatRoomName = "단체 채팅방"
                     )
@@ -113,7 +113,7 @@ class EditPostActivity : AppCompatActivity() {
                     }
                 }
             }
-            else -> finish()
+            else -> super.finish()
         }
         return super.onOptionsItemSelected(item)
     }

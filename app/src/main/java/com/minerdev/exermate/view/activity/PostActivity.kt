@@ -105,7 +105,9 @@ class PostActivity : AppCompatActivity() {
                         val jsonResponse = JSONObject(response)
                         val result = jsonResponse.getBoolean("success")
                         if (result) {
-                            ChatRoomService.readAllMembers(postId, readCallBack)
+                            CoroutineScope(Dispatchers.IO).launch {
+                                ChatRoomService.readAllMembers(postId, readCallBack)
+                            }
 
                         } else {
                             Toast.makeText(this, "채팅방에 참가 할 수 없습니다!", Toast.LENGTH_SHORT).show()

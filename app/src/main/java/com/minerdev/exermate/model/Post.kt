@@ -28,5 +28,6 @@ data class Post(
         put("exerTime", exerciseTime)
         put("maxNum", maxMemberNum)
         put("contents", text)
+        put("chatRoomName", chatRoomName)
     }
 }
