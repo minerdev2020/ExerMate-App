@@ -22,8 +22,9 @@ class DevNetworkSettingActivity : AppCompatActivity() {
         }
 
         binding.btnOk.setOnClickListener {
-            Constants.BASE_URL =
-                "http://" + binding.etIp.text.toString() + ":" + binding.etPort.text.toString()
+            Constants.SERVER_IP_ADDRESS = binding.etIp.text.toString()
+            Constants.SERVER_HTTP_PORT = binding.etPort.text.toString()
+            Constants.SERVER_WEB_SOCKET_PORT = "520"
 
             startActivity(Intent(this, LoginActivity::class.java))
             finish()

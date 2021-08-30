@@ -10,7 +10,7 @@ class DBHelper(context: Context) :
         db?.execSQL("create table walkRecords(id integer primary key autoincrement, createdAt integer, stepCount integer);")
         db?.execSQL("create table joinedChatRooms(id integer primary key autoincrement, roomId text, name text);")
         db?.execSQL("create table chatMembers(id integer primary key autoincrement, roomId text, userId text, email text, nickname text, profileUrl text);")
-        db?.execSQL("create table chatLogs(id integer primary key autoincrement, roomId text, fromId text, createdAt integer, text text, type integer);")
+        db?.execSQL("create table chatLogs(id integer primary key autoincrement, roomId text, fromId text, createdAt integer, text text, url text, type integer);")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

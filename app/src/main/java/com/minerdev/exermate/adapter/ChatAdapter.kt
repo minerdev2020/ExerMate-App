@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.minerdev.exermate.R
 import com.minerdev.exermate.databinding.*
 import com.minerdev.exermate.model.ChatLog
 import com.minerdev.exermate.model.User
@@ -32,7 +33,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     fun initChatRoom(members: ArrayList<User>) {
         for (member in members) {
-            memberInfo[member.id] = member
+            memberInfo[member.email] = member
         }
     }
 
@@ -41,7 +42,11 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-    fun updateChatLogs(chatLog: ChatLog) {
+    fun addChatMembers(member: User) {
+        memberInfo[member.email] = member
+    }
+
+    fun addChatLogs(chatLog: ChatLog) {
         chatLogs.add(chatLog)
         notifyItemInserted(chatLogs.size - 1)
     }
@@ -128,9 +133,13 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
         val chatLog = chatLogs[position]
 
         if (holder is ItemChatStartViewHolder || holder is ItemChatStartPhotoViewHolder) {
-            val nickname = memberInfo[chatLog.fromId]?.nickname ?: ""
+            val nickname = memberInfo[chatLog.fromId]?.nickname ?: "(알 수 없음)"
             val profileUrl = memberInfo[chatLog.fromId]?.profileUrl ?: ""
             holder.bind(chatLog, nickname, profileUrl)
+
+        } else if (holder is ItemSystemChatViewHolder) {
+            chatLog.text = "${memberInfo[chatLog.fromId]?.nickname ?: "(알 수 없음)"}님이 채팅방에 입장하셨습니다."
+            holder.bind(chatLog)
 
         } else {
             holder.bind(chatLog)
@@ -177,13 +186,13 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
             CoroutineScope(Dispatchers.Main).launch {
                 val bitmap = withContext(Dispatchers.IO) {
-                    LoadImage.get(chatLog.text)
+                    LoadImage.get(chatLog.url)
                 }
                 binding.ivPhoto.setImageBitmap(bitmap)
             }
 
             binding.ivPhoto.setOnClickListener {
-                listener(chatLog.text)
+                listener(chatLog.url)
             }
         }
     }
@@ -198,13 +207,13 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
             CoroutineScope(Dispatchers.Main).launch {
                 val bitmap = withContext(Dispatchers.IO) {
-                    LoadImage.get(chatLog.text)
+                    LoadImage.get(chatLog.url)
                 }
                 binding.ivPhoto.setImageBitmap(bitmap)
             }
 
             binding.ivPhoto.setOnClickListener {
-                listener(chatLog.text)
+                listener(chatLog.url)
             }
         }
     }
@@ -219,15 +228,16 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
             binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatLog.createdAt)
             binding.tvChat.text = chatLog.text
 
-            CoroutineScope(Dispatchers.Main).launch {
-                val bitmap = withContext(Dispatchers.IO) {
-                    LoadImage.get(profileUrl)
-                }
-                binding.ivProfile.setImageBitmap(bitmap)
-            }
+            if (profileUrl.isBlank()) {
+                binding.ivProfile.setImageResource(R.drawable.ic_round_account_circle_24)
 
-            binding.ivProfile.setOnClickListener {
-                listener(profileUrl)
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val bitmap = withContext(Dispatchers.IO) {
+                        LoadImage.get(profileUrl)
+                    }
+                    binding.ivProfile.setImageBitmap(bitmap)
+                }
             }
         }
     }
@@ -241,22 +251,27 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
             binding.tvNickname.text = nickname
             binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatLog.createdAt)
 
+            if (profileUrl.isBlank()) {
+                binding.ivProfile.setImageResource(R.drawable.ic_round_account_circle_24)
+
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val bitmap = withContext(Dispatchers.IO) {
+                        LoadImage.get(profileUrl)
+                    }
+                    binding.ivProfile.setImageBitmap(bitmap)
+                }
+            }
+
             CoroutineScope(Dispatchers.Main).launch {
-                val profileBitmap = withContext(Dispatchers.IO) {
-                    LoadImage.get(profileUrl)
-                }
                 val bitmap = withContext(Dispatchers.IO) {
-                    LoadImage.get(chatLog.text)
+                    LoadImage.get(chatLog.url)
                 }
-                binding.ivProfile.setImageBitmap(profileBitmap)
                 binding.ivPhoto.setImageBitmap(bitmap)
             }
 
-            binding.ivProfile.setOnClickListener {
-                listener(profileUrl)
-            }
             binding.ivPhoto.setOnClickListener {
-                listener(chatLog.text)
+                listener(chatLog.url)
             }
         }
     }

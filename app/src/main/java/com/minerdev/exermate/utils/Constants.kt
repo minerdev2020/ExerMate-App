@@ -10,11 +10,14 @@ object Constants {
     const val FINISH_INTERVAL_TIME = 2000
     const val FILE_MAX_SIZE: Long = 10485760
 
-    var BASE_URL: String = ""
-    const val API_AUTH = "/auth/"
-    const val API_USER = "/user/"
-    const val API_POST = "/exerpost/"
-    const val API_CHATROOM = "/chatroom/"
+    var SERVER_IP_ADDRESS: String = ""
+    var SERVER_HTTP_PORT: String = ""
+    var SERVER_WEB_SOCKET_PORT: String = ""
+
+    const val API_AUTH = "/auth"
+    const val API_USER = "/user"
+    const val API_POST = "/exerpost"
+    const val API_CHATROOM = "/chatroom"
 
     var USER_EMAIL: String = ""
 }

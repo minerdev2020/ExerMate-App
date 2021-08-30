@@ -1,7 +1,7 @@
 package com.minerdev.exermate.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.minerdev.exermate.utils.Constants.BASE_URL
+import com.minerdev.exermate.utils.Constants
 import kotlinx.serialization.json.Json
 import okhttp3.JavaNetCookieJar
 import okhttp3.MediaType.Companion.toMediaType
@@ -26,7 +26,7 @@ object RetrofitClient {
             val contentType = "application/json".toMediaType()
 
             instance = Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl("http://${Constants.SERVER_IP_ADDRESS}:${Constants.SERVER_HTTP_PORT}")
                 .addConverterFactory(Json.asConverterFactory(contentType))
                 .client(client)
                 .build()

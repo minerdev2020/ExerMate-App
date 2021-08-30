@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
         dbHelper = DBHelper(this)
         sqlDB = dbHelper.writableDatabase
 
-        if (Constants.APPLICATION_MODE == Constants.DEV_MODE && Constants.BASE_URL.isBlank()) {
+        if (Constants.APPLICATION_MODE == Constants.DEV_MODE && Constants.SERVER_IP_ADDRESS.isBlank() || Constants.SERVER_HTTP_PORT.isBlank() || Constants.SERVER_WEB_SOCKET_PORT.isBlank()) {
             startActivity(Intent(this, DevNetworkSettingActivity::class.java))
             finish()
             return
