@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.minerdev.exermate.databinding.ItemChatRoomBinding
 import com.minerdev.exermate.model.ChatRoom
-import com.minerdev.exermate.utils.Time
 
 class ChatRoomAdapter(diffCallBack: DiffCallBack) :
     ListAdapter<ChatRoom, ChatRoomAdapter.ViewHolder>(diffCallBack) {
@@ -45,7 +44,6 @@ class ChatRoomAdapter(diffCallBack: DiffCallBack) :
         }
 
         fun bind(chatRoom: ChatRoom) {
-            binding.tvCreatedAt.text = Time.convertTimestampToHMS(chatRoom.createdAt)
             binding.tvName.text = chatRoom.name
         }
     }
